@@ -4,7 +4,7 @@ public class ParserMain {
 
     public static void main(String[] args) throws Exception {
         Parser parser = new Parser(System.in);
-        SimpleNode node = parser.start();
+        SimpleNode node = parser.Start();
 
         System.out.println("Dump...");
         node.dump("");

@@ -2,6 +2,7 @@
 
 options {
     VISITOR = true;
+    MULTI = true;
 }
 
 // --- Definition of parser ---
@@ -53,25 +54,25 @@ TOKEN: {
 // T -> F ("*" T | "/" F)*
 // F -> N | "(" E ")"
 
-SimpleNode start(): {
+SimpleNode Start(): {
 } {
-    expression() <NEWLINE> {
+    Expression() <NEWLINE> {
         return jjtThis;
     }
 }
 
-void expression(): {
+void Expression(): {
 } {
-    term() ( <ADD> term() | <SUBTRACT> term() )*
+    Term() ( <ADD> Term() | <SUBTRACT> Term() )*
 }
 
-void term(): {
+void Term(): {
 } {
-    factor() ( <MULT> factor() | <DIV> factor() )*
+    Factor() ( <MULT> Factor() | <DIV> Factor() )*
 }
 
-void factor(): {
+void Factor(): {
 } {
     <NUMBER>
-    | <LPAREN> expression() <RPAREN>
+    | <LPAREN> Expression() <RPAREN>
 }

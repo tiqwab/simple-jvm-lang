@@ -71,8 +71,16 @@ start
 
 作成される AST を使いやすくするためにいくつか変更を加える。
 
-#### MULTI option の追加
+#### VISITOR option の追加
 
+`jjt` ファイルの `options` に `VISITOR = true;` を追加する。
+
+```
+options {
+    VISITOR = true;
+}
+
+```
 `Node` インタフェースに `jjtAccept` メソッドが定義される。
 
 ```java
@@ -108,6 +116,38 @@ public class Parser {
         node.jjtAccept(new SampleVisitor(), null);
     }
 
+}
+```
+
+#### MULTI option の追加
+
+`jjt` ファイルの `options` に `MULTI = true;` を追加する。
+
+```
+options {
+    VISITOR = true;
+    MULTI = true;
+}
+```
+
+MULTI オプションを true にすると、各生成規則に対応した Node クラスが作成される。
+
+- SimpleNode (これまでも存在したデフォルトの Node 実装クラス)
+- ASTStart
+- ASTExpression
+- ASTTerm
+- ASTFactor
+
+また `ParseVisitor` に各ノードに対応する visit メソッドが定義される。
+
+```java
+public interface ParserVisitor
+{
+  public Object visit(SimpleNode node, Object data);
+  public Object visit(ASTStart node, Object data);
+  public Object visit(ASTExpression node, Object data);
+  public Object visit(ASTTerm node, Object data);
+  public Object visit(ASTFactor node, Object data);
 }
 ```
 
