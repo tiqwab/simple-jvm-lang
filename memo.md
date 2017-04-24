@@ -5,6 +5,11 @@
 
 [golo-lang][1] を参考に色々調べて記述。
 
+### javaccPlugin
+
+[javaccPlugin][2] は JavaCC を 実行するための Gradle plugin です。
+Gradle のタスクとして JavaCC による処理が行えるので便利です。
+
 ### 構文規則
 
 `.jj` ファイルに記述。
@@ -152,3 +157,4 @@ public interface ParserVisitor
 ```
 
 [1]: https://github.com/eclipse/golo-lang/ "golo-lang"
+[2]: https://github.com/johnmartel/javaccPlugin "javaccPlugin"
