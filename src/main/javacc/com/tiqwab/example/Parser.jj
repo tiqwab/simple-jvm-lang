@@ -45,23 +45,40 @@ TOKEN: {
 // T -> F ("*" T | "/" F)*
 // F -> N | "(" E ")"
 
-void start(): {
+int start(): {
+    int result;
 } {
-    expression() <NEWLINE>
+    result = expression() <NEWLINE> { return result; }
 }
 
-void expression(): {
+int expression(): {
+    int result;
+    int term;
 } {
-    term() ( <ADD> term() | <SUBTRACT> term() )*
+    result = term() (
+        <ADD> term = term() { result += term; }
+        | <SUBTRACT> term = term() { result -= term; }
+    )* {
+        return result;
+    }
 }
 
-void term(): {
+int term(): {
+    int result;
+    int factor;
 } {
-    factor() ( <MULT> factor() | <DIV> factor() )*
+    result = factor() (
+        <MULT> factor = factor() { result *= factor; }
+        | <DIV> factor = factor() { result /= factor; }
+        )* {
+        return result;
+    }
 }
 
-void factor(): {
+int factor(): {
+    Token factor;
+    int expr;
 } {
-    <NUMBER>
-    | <LPAREN> expression() <RPAREN>
+    factor = <NUMBER> { return Integer.parseInt(factor.image); }
+    | <LPAREN> expr = expression() <RPAREN> { return expr; }
 }
