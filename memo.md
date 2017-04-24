@@ -3,6 +3,8 @@
 - LL(k) 文法を対象とする
   - 標準では LL(1)
 
+[golo-lang][1] を参考に色々調べて記述。
+
 ### 構文規則
 
 `.jj` ファイルに記述。
@@ -68,3 +70,45 @@ start
 ```
 
 作成される AST を使いやすくするためにいくつか変更を加える。
+
+#### MULTI option の追加
+
+`Node` インタフェースに `jjtAccept` メソッドが定義される。
+
+```java
+public Object jjtAccept(ParserVisitor visitor, Object data);
+```
+
+対応した `ParseVisitor` インタフェースも定義される。
+
+```java
+public interface ParserVisitor
+{
+  public Object visit(SimpleNode node, Object data);
+}
+```
+
+`ParserVisior` を実装したクラスを使用すれば、簡単に Visitor パターンで処理ができる。
+
+```java
+public class Parser {
+
+    public static class SampleVisitor implements ParserVisitor {
+        @Override
+        public Object visit(SimpleNode node, Object data) {
+            System.out.println(node.toString());
+            node.childrenAccept(this, data);
+            return data;
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        Parser parser = new Parser(System.in);
+        SimpleNode node = parser.start();
+        node.jjtAccept(new SampleVisitor(), null);
+    }
+
+}
+```
+
+[1]: https://github.com/eclipse/golo-lang/ "golo-lang"

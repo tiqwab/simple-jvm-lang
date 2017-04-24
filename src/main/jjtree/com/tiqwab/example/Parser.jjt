@@ -1,3 +1,11 @@
+// --- Options ---
+
+options {
+    VISITOR = true;
+}
+
+// --- Definition of parser ---
+
 PARSER_BEGIN (Parser)
 
 package com.tiqwab.example;
