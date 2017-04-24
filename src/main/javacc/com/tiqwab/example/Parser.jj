@@ -6,6 +6,42 @@ public class Parser {
 }
 PARSER_END (Parser)
 
+// --- Definition of tokens ---
+
+// White space
+SKIP: {
+    " "
+    | "\t"
+    | "\r"
+    | "\f"
+}
+
+TOKEN: {
+    < NEWLINE: "\n" >
+}
+
+// Operator
+TOKEN: {
+    < ADD: "+" >
+    | < SUBTRACT: "-" >
+}
+
+// Number
+TOKEN: {
+    < NUMBER: (["0"-"9"])+ >
+}
+
+// --- Translation Scheme ---
+
+int number(): {
+    Token number;
+} {
+    number = <NUMBER> <NEWLINE> {
+        System.out.println(number);
+        return Integer.parseInt(number.image);
+    }
+}
+
 void List(): {
 } {
     "Hello World.\n"
