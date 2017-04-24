@@ -28,6 +28,12 @@ TOKEN: {
     | < DIV: "/" >
 }
 
+// Symbols
+TOKEN: {
+    < LPAREN: "(" >
+    | <RPAREN: ")" >
+}
+
 // Number
 TOKEN: {
     < NUMBER: (["0"-"9"])+ >
@@ -37,7 +43,7 @@ TOKEN: {
 
 // E -> T ("+" T | "-" T)*
 // T -> F ("*" T | "/" F)*
-// F -> N
+// F -> N | "(" E ")"
 
 void start(): {
 } {
@@ -57,4 +63,5 @@ void term(): {
 void factor(): {
 } {
     <NUMBER>
+    | <LPAREN> expression() <RPAREN>
 }
