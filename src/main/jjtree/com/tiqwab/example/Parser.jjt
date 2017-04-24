@@ -1,0 +1,69 @@
+PARSER_BEGIN (Parser)
+
+package com.tiqwab.example;
+
+public class Parser {
+}
+PARSER_END (Parser)
+
+// --- Definition of tokens ---
+
+// White space
+SKIP: {
+    " "
+    | "\t"
+    | "\r"
+    | "\f"
+}
+
+TOKEN: {
+    < NEWLINE: "\n" >
+}
+
+// Operator
+TOKEN: {
+    < ADD: "+" >
+    | < SUBTRACT: "-" >
+    | < MULT: "*" >
+    | < DIV: "/" >
+}
+
+// Symbols
+TOKEN: {
+    < LPAREN: "(" >
+    | <RPAREN: ")" >
+}
+
+// Number
+TOKEN: {
+    < NUMBER: (["0"-"9"])+ >
+}
+
+// --- Translation Scheme ---
+
+// E -> T ("+" T | "-" T)*
+// T -> F ("*" T | "/" F)*
+// F -> N | "(" E ")"
+
+SimpleNode start(): {
+} {
+    expression() <NEWLINE> {
+        return jjtThis;
+    }
+}
+
+void expression(): {
+} {
+    term() ( <ADD> term() | <SUBTRACT> term() )*
+}
+
+void term(): {
+} {
+    factor() ( <MULT> factor() | <DIV> factor() )*
+}
+
+void factor(): {
+} {
+    <NUMBER>
+    | <LPAREN> expression() <RPAREN>
+}
