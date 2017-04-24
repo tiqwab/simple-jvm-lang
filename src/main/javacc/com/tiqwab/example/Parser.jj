@@ -1,0 +1,12 @@
+PARSER_BEGIN (Parser)
+
+package com.tiqwab.example;
+
+public class Parser {
+}
+PARSER_END (Parser)
+
+void List(): {
+} {
+    "Hello World.\n"
+}
