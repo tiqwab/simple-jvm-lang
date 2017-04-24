@@ -24,6 +24,8 @@ TOKEN: {
 TOKEN: {
     < ADD: "+" >
     | < SUBTRACT: "-" >
+    | < MULT: "*" >
+    | < DIV: "/" >
 }
 
 // Number
@@ -33,16 +35,26 @@ TOKEN: {
 
 // --- Translation Scheme ---
 
-int number(): {
-    Token number;
+// E -> T ("+" T | "-" T)*
+// T -> F ("*" T | "/" F)*
+// F -> N
+
+void start(): {
 } {
-    number = <NUMBER> <NEWLINE> {
-        System.out.println(number);
-        return Integer.parseInt(number.image);
-    }
+    expression() <NEWLINE>
 }
 
-void List(): {
+void expression(): {
 } {
-    "Hello World.\n"
+    term() ( <ADD> term() | <SUBTRACT> term() )*
+}
+
+void term(): {
+} {
+    factor() ( <MULT> factor() | <DIV> factor() )*
+}
+
+void factor(): {
+} {
+    <NUMBER>
 }
