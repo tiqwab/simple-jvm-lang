@@ -92,8 +92,7 @@ public class JavaBytecodeGenerationVisitor implements ParserVisitor {
 
     @Override
     public Object visit(SimpleNode node, Object data) {
-        node.childrenAccept(this, data);
-        return data;
+        throw new IllegalStateException("this node should not be visited.");
     }
 
     /**
