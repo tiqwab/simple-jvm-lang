@@ -12,6 +12,10 @@ public class JBCBinaryOperator implements JBCExpr {
         this.rhs = rhs;
     }
 
+    public String getOp() {
+        return this.op;
+    }
+
     @Override
     public String toString() {
         return String.format("JBCBinaryOperator{op=%s, lhs=%s, rhs=%s}", this.op, this.lhs, this.rhs);

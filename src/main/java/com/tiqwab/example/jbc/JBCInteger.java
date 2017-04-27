@@ -8,6 +8,10 @@ public class JBCInteger implements JBCExpr {
         this.value = Integer.parseInt(value);
     }
 
+    public int getValue() {
+        return this.value;
+    }
+
     @Override
     public String toString() {
         return String.format("JBCInteger{value=%s}", value);

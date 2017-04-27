@@ -22,7 +22,7 @@ public class ParserMain {
         JBCNode jbcNode = astNode.getJbcNode();
         System.out.println(jbcNode.toString());
         JBCGenerationVisitor jbcGenerationVisitor = new JBCGenerationVisitor();
-        jbcNode.accept(jbcGenerationVisitor);
+        jbcGenerationVisitor.generateCode(jbcNode);
         new GeneratedCodeOutputter().output(jbcGenerationVisitor.getGeneratedCode());
     }
 

@@ -11,6 +11,8 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
     private String generatedClassName;
     private GeneratedCode generatedCode;
 
+    private MethodVisitor mv;
+
     public JBCGenerationVisitor() {
         this.generatedClassName = "Calculation";
     }
@@ -87,22 +89,53 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
         mv.visitEnd();
     }
 
-    @Override
-    public void visit(JBCEval node) {
+    public void generateCode(JBCNode node) {
         this.preVisit();
         this.visitConstructor();
         this.visitMain();
+
+        // Start creation of method to calculate
+        mv = classWriter.visitMethod(
+                Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC,
+                "calculate",
+                "()V",
+                null,
+                null
+        );
+        mv.visitCode();
+
+        // Generate java byte code to calculate expression
+        node.accept(this);
+
+        // Finish creation
+        mv.visitInsn(Opcodes.RETURN);
+        mv.visitMaxs(0,0);
+        mv.visitEnd();
+
         this.generatedCode = new GeneratedCode(this.classWriter.toByteArray(), this.generatedClassName);
     }
 
     @Override
-    public void visit(JBCBinaryOperator node) {
+    public void visit(JBCEval node) {
 
     }
 
+    // TODO: Code generation should be performed in JBCNode? e.g. JBCNode#gen(MethodVisitor mv)
+    @Override
+    public void visit(JBCBinaryOperator node) {
+        if (node.getOp().equals("+")) {
+            mv.visitInsn(Opcodes.IADD);
+        } else if (node.getOp().equals("*")) {
+            mv.visitInsn(Opcodes.IMUL);
+        } else {
+            throw new IllegalArgumentException("unknown op: " + node.getOp());
+        }
+    }
+
+    // TODO: Code generation should be performed in JBCNode? e.g. JBCNode#gen(MethodVisitor mv)
     @Override
     public void visit(JBCInteger node) {
-
+        mv.visitIntInsn(Opcodes.BIPUSH, node.getValue());
     }
 
 }
