@@ -70,21 +70,30 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
                 null
         );
         mv.visitCode();
+
+        // Print calculation result
         mv.visitFieldInsn(
                 Opcodes.GETSTATIC,
                 "java/lang/System",
                 "out",
                 "Ljava/io/PrintStream;"
         );
-        mv.visitLdcInsn("hello ASM");
+        mv.visitMethodInsn(
+                Opcodes.INVOKESTATIC,
+                "Calculation",
+                "calculate",
+                "()I",
+                false
+        );
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
                 "java/io/PrintStream",
                 "println",
-                "(Ljava/lang/String;)V",
+                "(I)V",
                 false
         );
         mv.visitInsn(Opcodes.RETURN);
+
         mv.visitMaxs(0,0);
         mv.visitEnd();
     }
@@ -98,7 +107,7 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
         mv = classWriter.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC,
                 "calculate",
-                "()V",
+                "()I",
                 null,
                 null
         );
@@ -108,7 +117,7 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
         node.accept(this);
 
         // Finish creation
-        mv.visitInsn(Opcodes.RETURN);
+        mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0,0);
         mv.visitEnd();
 
