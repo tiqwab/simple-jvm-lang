@@ -13,4 +13,9 @@ public class JBCInteger implements JBCExpr {
         return String.format("JBCInteger{value=%s}", value);
     }
 
+    @Override
+    public void accept(JBCNodeVisitor visitor) {
+        visitor.visit(this);
+    }
+
 }

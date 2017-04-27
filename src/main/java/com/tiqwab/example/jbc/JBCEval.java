@@ -13,4 +13,10 @@ public class JBCEval implements JBCStmt {
         return String.format("JBCEval{expr=%s}", this.expr.toString());
     }
 
+    @Override
+    public void accept(JBCNodeVisitor visitor) {
+        expr.accept(visitor);
+        visitor.visit(this);
+    }
+
 }

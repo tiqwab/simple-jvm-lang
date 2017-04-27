@@ -1,20 +1,17 @@
-package com.tiqwab.example;
+package com.tiqwab.example.jbc;
 
+import com.tiqwab.example.GeneratedCode;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-/**
- * Visitor class for AST to generate java byte codes.
- * This class depends on 'org.ow2.asm' libraries.
- */
-public class JavaBytecodeGenerationVisitor implements ParserVisitor {
+public class JBCGenerationVisitor implements JBCNodeVisitor {
 
     private ClassWriter classWriter;
     private String generatedClassName;
     private GeneratedCode generatedCode;
 
-    public JavaBytecodeGenerationVisitor() {
+    public JBCGenerationVisitor() {
         this.generatedClassName = "Calculation";
     }
 
@@ -91,41 +88,21 @@ public class JavaBytecodeGenerationVisitor implements ParserVisitor {
     }
 
     @Override
-    public Object visit(SimpleNode node, Object data) {
-        throw new IllegalStateException("this node should not be visited.");
-    }
-
-    /**
-     * Visit a node representing the starting rule.
-     * @param node
-     * @param data
-     * @return
-     */
-    @Override
-    public Object visit(ASTStart node, Object data) {
+    public void visit(JBCEval node) {
         this.preVisit();
         this.visitConstructor();
         this.visitMain();
         this.generatedCode = new GeneratedCode(this.classWriter.toByteArray(), this.generatedClassName);
-        return data;
     }
 
     @Override
-    public Object visit(ASTExpression node, Object data) {
-        node.childrenAccept(this, data);
-        return data;
+    public void visit(JBCBinaryOperator node) {
+
     }
 
     @Override
-    public Object visit(ASTTerm node, Object data) {
-        node.childrenAccept(this, data);
-        return data;
-    }
+    public void visit(JBCInteger node) {
 
-    @Override
-    public Object visit(ASTFactor node, Object data) {
-        node.childrenAccept(this, data);
-        return data;
     }
 
 }

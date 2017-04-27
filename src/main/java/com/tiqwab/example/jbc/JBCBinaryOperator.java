@@ -17,4 +17,11 @@ public class JBCBinaryOperator implements JBCExpr {
         return String.format("JBCBinaryOperator{op=%s, lhs=%s, rhs=%s}", this.op, this.lhs, this.rhs);
     }
 
+    @Override
+    public void accept(JBCNodeVisitor visitor) {
+        lhs.accept(visitor);
+        rhs.accept(visitor);
+        visitor.visit(this);
+    }
+
 }
