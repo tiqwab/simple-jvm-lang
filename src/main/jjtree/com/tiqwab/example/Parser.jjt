@@ -64,7 +64,7 @@ SimpleNode Start(): {
     JBCNode expression;
 } {
     expression = Expression() <NEWLINE> {
-        jjtThis.setJbcNode(expression);
+        jjtThis.setJbcNode(new JBCEval((JBCExpr) expression));
         return jjtThis;
     }
 }
