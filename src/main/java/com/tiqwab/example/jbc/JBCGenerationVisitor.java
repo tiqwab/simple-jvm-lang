@@ -144,7 +144,15 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
     // TODO: Code generation should be performed in JBCNode? e.g. JBCNode#gen(MethodVisitor mv)
     @Override
     public void visit(JBCInteger node) {
-        mv.visitIntInsn(Opcodes.BIPUSH, node.getValue());
+        final int value = node.getValue();
+        // The generated code is determined by the necessary size (byte) of integer.
+        if (-128 <= value && value < 128) {
+            mv.visitIntInsn(Opcodes.BIPUSH, node.getValue());
+        } else if (-32768 <= value && value < 32768){
+            mv.visitIntInsn(Opcodes.SIPUSH, node.getValue());
+        } else {
+            mv.visitLdcInsn(value);
+        }
     }
 
 }
