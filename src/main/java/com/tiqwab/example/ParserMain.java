@@ -18,6 +18,10 @@ public class ParserMain {
         JavaBytecodeGenerationVisitor codeGenerationVisitor = new JavaBytecodeGenerationVisitor();
         node.jjtAccept(codeGenerationVisitor, null);
         new GeneratedCodeOutputter().output(codeGenerationVisitor.getGeneratedCode());
+        System.out.println();
+
+        ASTNodeBase astNode = (ASTNodeBase) node;
+        System.out.println(astNode.getJbcNode().toString());
     }
 
 }

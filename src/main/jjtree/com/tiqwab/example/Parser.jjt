@@ -15,6 +15,8 @@ PARSER_BEGIN (Parser)
 
 package com.tiqwab.example;
 
+import com.tiqwab.example.jbc.*;
+
 public class Parser {
 }
 PARSER_END (Parser)
@@ -59,24 +61,50 @@ TOKEN: {
 // F -> N | "(" E ")"
 
 SimpleNode Start(): {
+    JBCNode expression;
 } {
-    Expression() <NEWLINE> {
+    expression = Expression() <NEWLINE> {
+        jjtThis.setJbcNode(expression);
         return jjtThis;
     }
 }
 
-void Expression(): {
+JBCNode Expression(): {
+    JBCNode term1;
+    JBCNode term2;
 } {
-    Term() ( <ADD> Term() | <SUBTRACT> Term() )*
+    term1 = Term() { jjtThis.setJbcNode(term1); } (
+        <ADD> term2 = Term() {
+            jjtThis.setJbcNode(new JBCBinaryOperator("+", jjtThis.getJbcNode(), term2));
+        }
+        | <SUBTRACT> Term()
+    )* {
+        return jjtThis.getJbcNode();
+    }
 }
 
-void Term(): {
+JBCNode Term(): {
+    JBCNode factor1;
+    JBCNode factor2;
 } {
-    Factor() ( <MULT> Factor() | <DIV> Factor() )*
+    factor1 = Factor() { jjtThis.setJbcNode(factor1); } ( 
+        <MULT> factor2 = Factor() {
+            jjtThis.setJbcNode(new JBCBinaryOperator("*", jjtThis.getJbcNode(), factor2));
+        }
+        | <DIV> Factor()
+    )* {
+        return jjtThis.getJbcNode();
+    }
 }
 
-void Factor(): {
+JBCNode Factor(): {
+    Token number;
 } {
-    <NUMBER>
-    | <LPAREN> Expression() <RPAREN>
+    number = <NUMBER> {
+        jjtThis.setJbcNode(new JBCInteger(number.image));
+        return jjtThis.getJbcNode();
+    }
+    | <LPAREN> Expression() <RPAREN> {
+        return null;
+    }
 }
