@@ -1,20 +1,19 @@
-package com.tiqwab.example;
+package com.tiqwab.example.jbc;
 
+import com.tiqwab.example.GeneratedCode;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-/**
- * Visitor class for AST to generate java byte codes.
- * This class depends on 'org.ow2.asm' libraries.
- */
-public class JavaBytecodeGenerationVisitor implements ParserVisitor {
+public class JBCGenerationVisitor implements JBCNodeVisitor {
 
     private ClassWriter classWriter;
     private String generatedClassName;
     private GeneratedCode generatedCode;
 
-    public JavaBytecodeGenerationVisitor() {
+    private MethodVisitor mv;
+
+    public JBCGenerationVisitor() {
         this.generatedClassName = "Calculation";
     }
 
@@ -71,61 +70,93 @@ public class JavaBytecodeGenerationVisitor implements ParserVisitor {
                 null
         );
         mv.visitCode();
+
+        // Print calculation result
         mv.visitFieldInsn(
                 Opcodes.GETSTATIC,
                 "java/lang/System",
                 "out",
                 "Ljava/io/PrintStream;"
         );
-        mv.visitLdcInsn("hello ASM");
+        mv.visitMethodInsn(
+                Opcodes.INVOKESTATIC,
+                "Calculation",
+                "calculate",
+                "()I",
+                false
+        );
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
                 "java/io/PrintStream",
                 "println",
-                "(Ljava/lang/String;)V",
+                "(I)V",
                 false
         );
         mv.visitInsn(Opcodes.RETURN);
+
         mv.visitMaxs(0,0);
         mv.visitEnd();
     }
 
-    @Override
-    public Object visit(SimpleNode node, Object data) {
-        throw new IllegalStateException("this node should not be visited.");
-    }
-
-    /**
-     * Visit a node representing the starting rule.
-     * @param node
-     * @param data
-     * @return
-     */
-    @Override
-    public Object visit(ASTStart node, Object data) {
+    public void generateCode(JBCNode node) {
         this.preVisit();
         this.visitConstructor();
         this.visitMain();
+
+        // Start creation of method to calculate
+        mv = classWriter.visitMethod(
+                Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC,
+                "calculate",
+                "()I",
+                null,
+                null
+        );
+        mv.visitCode();
+
+        // Generate java byte code to calculate expression
+        node.accept(this);
+
+        // Finish creation
+        mv.visitInsn(Opcodes.IRETURN);
+        mv.visitMaxs(0,0);
+        mv.visitEnd();
+
         this.generatedCode = new GeneratedCode(this.classWriter.toByteArray(), this.generatedClassName);
-        return data;
     }
 
     @Override
-    public Object visit(ASTExpression node, Object data) {
-        node.childrenAccept(this, data);
-        return data;
+    public void visit(JBCEval node) {
+
     }
 
+    // TODO: Code generation should be performed in JBCNode? e.g. JBCNode#gen(MethodVisitor mv)
     @Override
-    public Object visit(ASTTerm node, Object data) {
-        node.childrenAccept(this, data);
-        return data;
+    public void visit(JBCBinaryOperator node) {
+        if (node.getOp().equals("+")) {
+            mv.visitInsn(Opcodes.IADD);
+        } else if (node.getOp().equals("-")) {
+            mv.visitInsn(Opcodes.ISUB);
+        } else if (node.getOp().equals("*")) {
+            mv.visitInsn(Opcodes.IMUL);
+        } else if (node.getOp().equals("/")) {
+            mv.visitInsn(Opcodes.IDIV);
+        } else {
+            throw new IllegalArgumentException("unknown op: " + node.getOp());
+        }
     }
 
+    // TODO: Code generation should be performed in JBCNode? e.g. JBCNode#gen(MethodVisitor mv)
     @Override
-    public Object visit(ASTFactor node, Object data) {
-        node.childrenAccept(this, data);
-        return data;
+    public void visit(JBCInteger node) {
+        final int value = node.getValue();
+        // The generated code is determined by the necessary size (byte) of integer.
+        if (-128 <= value && value < 128) {
+            mv.visitIntInsn(Opcodes.BIPUSH, node.getValue());
+        } else if (-32768 <= value && value < 32768){
+            mv.visitIntInsn(Opcodes.SIPUSH, node.getValue());
+        } else {
+            mv.visitLdcInsn(value);
+        }
     }
 
 }

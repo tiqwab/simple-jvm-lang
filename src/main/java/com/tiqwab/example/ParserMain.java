@@ -1,5 +1,8 @@
 package com.tiqwab.example;
 
+import com.tiqwab.example.jbc.JBCGenerationVisitor;
+import com.tiqwab.example.jbc.JBCNode;
+
 public class ParserMain {
 
     public static void main(String[] args) throws Exception {
@@ -15,9 +18,12 @@ public class ParserMain {
         System.out.println();
 
         System.out.println("Generate java bytecodes...");
-        JavaBytecodeGenerationVisitor codeGenerationVisitor = new JavaBytecodeGenerationVisitor();
-        node.jjtAccept(codeGenerationVisitor, null);
-        new GeneratedCodeOutputter().output(codeGenerationVisitor.getGeneratedCode());
+        ASTNodeBase astNode = (ASTNodeBase) node;
+        JBCNode jbcNode = astNode.getJbcNode();
+        System.out.println(jbcNode.toString());
+        JBCGenerationVisitor jbcGenerationVisitor = new JBCGenerationVisitor();
+        jbcGenerationVisitor.generateCode(jbcNode);
+        new GeneratedCodeOutputter().output(jbcGenerationVisitor.getGeneratedCode());
     }
 
 }
