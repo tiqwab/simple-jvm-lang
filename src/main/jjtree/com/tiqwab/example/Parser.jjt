@@ -77,7 +77,9 @@ JBCNode Expression(): {
         <ADD> term2 = Term() {
             jjtThis.setJbcNode(new JBCBinaryOperator("+", jjtThis.getJbcNode(), term2));
         }
-        | <SUBTRACT> Term()
+        | <SUBTRACT> term2 = Term() {
+            jjtThis.setJbcNode(new JBCBinaryOperator("-", jjtThis.getJbcNode(), term2));
+        }
     )* {
         return jjtThis.getJbcNode();
     }
@@ -91,7 +93,9 @@ JBCNode Term(): {
         <MULT> factor2 = Factor() {
             jjtThis.setJbcNode(new JBCBinaryOperator("*", jjtThis.getJbcNode(), factor2));
         }
-        | <DIV> Factor()
+        | <DIV> factor2 = Factor() {
+            jjtThis.setJbcNode(new JBCBinaryOperator("/", jjtThis.getJbcNode(), factor2));
+        }
     )* {
         return jjtThis.getJbcNode();
     }
@@ -99,12 +103,14 @@ JBCNode Term(): {
 
 JBCNode Factor(): {
     Token number;
+    JBCNode expr;
 } {
     number = <NUMBER> {
         jjtThis.setJbcNode(new JBCInteger(number.image));
         return jjtThis.getJbcNode();
     }
-    | <LPAREN> Expression() <RPAREN> {
-        return null;
+    | <LPAREN> expr = Expression() <RPAREN> {
+        jjtThis.setJbcNode(expr);
+        return expr;
     }
 }

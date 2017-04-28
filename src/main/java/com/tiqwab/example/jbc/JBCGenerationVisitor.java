@@ -134,8 +134,12 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
     public void visit(JBCBinaryOperator node) {
         if (node.getOp().equals("+")) {
             mv.visitInsn(Opcodes.IADD);
+        } else if (node.getOp().equals("-")) {
+            mv.visitInsn(Opcodes.ISUB);
         } else if (node.getOp().equals("*")) {
             mv.visitInsn(Opcodes.IMUL);
+        } else if (node.getOp().equals("/")) {
+            mv.visitInsn(Opcodes.IDIV);
         } else {
             throw new IllegalArgumentException("unknown op: " + node.getOp());
         }

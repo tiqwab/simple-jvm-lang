@@ -156,5 +156,8 @@ public interface ParserVisitor
 }
 ```
 
+- 減算と除算を定義する
+- post にまとめる
+
 [1]: https://github.com/eclipse/golo-lang/ "golo-lang"
 [2]: https://github.com/johnmartel/javaccPlugin "javaccPlugin"
