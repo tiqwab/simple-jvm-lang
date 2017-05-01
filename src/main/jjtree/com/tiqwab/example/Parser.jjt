@@ -50,6 +50,12 @@ TOKEN: {
     | <EQUAL: "=" >
 }
 
+// Type modifier
+// This declaration must appear before Id.
+TOKEN: {
+    < VAR: "var" >
+}
+
 // Id
 TOKEN: {
     < ID: ["a"-"z", "A"-"Z", "_"](["a"-"z", "A"-"Z", "_", "0"-"9"])* >
@@ -64,7 +70,7 @@ TOKEN: {
 
 // E -> T ("+" T | "-" T)*
 // T -> F ("*" T | "/" F)*
-// F -> N | "(" E ")"
+// F -> N | "(" E ")" | id
 
 SimpleNode Start(): {
     JBCNode stmt;
@@ -84,7 +90,7 @@ JBCNode Statement(): {
             jjtThis.setJbcNode(new JBCEval((JBCExpr) expression));
         }
         |
-        id = <ID> <EQUAL> expression = Expression() {
+        <VAR> id = <ID> <EQUAL> expression = Expression() {
             jjtThis.setJbcNode(new JBCAssign(id.image, (JBCExpr) expression));
         }
     ) {
@@ -126,6 +132,7 @@ JBCNode Term(): {
 
 JBCNode Factor(): {
     Token number;
+    Token id;
     JBCNode expr;
 } {
     number = <NUMBER> {
@@ -135,5 +142,9 @@ JBCNode Factor(): {
     | <LPAREN> expr = Expression() <RPAREN> {
         jjtThis.setJbcNode(expr);
         return expr;
+    }
+    | id = <ID> {
+        jjtThis.setJbcNode(new JBCId(id.image));
+        return jjtThis.getJbcNode();
     }
 }

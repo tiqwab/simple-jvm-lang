@@ -169,4 +169,10 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
         }
     }
 
+    @Override
+    public void visit(JBCId node) {
+        final Symbol symbol = this.env.get(node.getName());
+        mv.visitVarInsn(Opcodes.ILOAD, symbol.getIndex());
+    }
+
 }
