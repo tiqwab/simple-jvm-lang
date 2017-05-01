@@ -1,6 +1,8 @@
 package com.tiqwab.example.jbc;
 
+import com.tiqwab.example.Environment;
 import com.tiqwab.example.GeneratedCode;
+import com.tiqwab.example.Symbol;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -10,6 +12,7 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
     private ClassWriter classWriter;
     private String generatedClassName;
     private GeneratedCode generatedCode;
+    private Environment env;
 
     private MethodVisitor mv;
 
@@ -31,6 +34,7 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
                 "java/lang/Object",
                 null
         );
+        this.env = new Environment();
     }
 
     /**
@@ -126,7 +130,8 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
 
     @Override
     public void visit(JBCAssign node) {
-
+        final Symbol symbol = this.env.get(node.getName());
+        mv.visitVarInsn(Opcodes.ISTORE, symbol.getIndex());
     }
 
     @Override

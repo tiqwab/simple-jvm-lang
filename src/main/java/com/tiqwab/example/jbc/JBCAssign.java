@@ -21,4 +21,8 @@ public class JBCAssign implements JBCStmt {
         visitor.visit(this);
     }
 
+    public String getName() {
+        return this.name;
+    }
+
 }
