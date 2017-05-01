@@ -47,6 +47,12 @@ TOKEN: {
 TOKEN: {
     < LPAREN: "(" >
     | <RPAREN: ")" >
+    | <EQUAL: "=" >
+}
+
+// Id
+TOKEN: {
+    < ID: ["a"-"z", "A"-"Z", "_"](["a"-"z", "A"-"Z", "_", "0"-"9"])* >
 }
 
 // Number
@@ -61,11 +67,28 @@ TOKEN: {
 // F -> N | "(" E ")"
 
 SimpleNode Start(): {
+    JBCNode stmt;
+} {
+    stmt = Statement() <NEWLINE> {
+        jjtThis.setJbcNode(stmt);
+        return jjtThis;
+    }
+}
+
+JBCNode Statement(): {
+    Token id;
     JBCNode expression;
 } {
-    expression = Expression() <NEWLINE> {
-        jjtThis.setJbcNode(new JBCEval((JBCExpr) expression));
-        return jjtThis;
+    (
+        expression = Expression() {
+            jjtThis.setJbcNode(new JBCEval((JBCExpr) expression));
+        }
+        |
+        id = <ID> <EQUAL> expression = Expression() {
+            jjtThis.setJbcNode(new JBCAssign(id.image, (JBCExpr) expression));
+        }
+    ) {
+        return jjtThis.getJbcNode();
     }
 }
 

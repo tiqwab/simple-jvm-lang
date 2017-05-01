@@ -125,6 +125,11 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
     }
 
     @Override
+    public void visit(JBCAssign node) {
+
+    }
+
+    @Override
     public void visit(JBCEval node) {
 
     }
