@@ -8,7 +8,7 @@ public class JBCInteger extends JBCNodeBase implements JBCExpr {
 
     public JBCInteger(final String value) {
         this.value = Integer.parseInt(value);
-        this.type = Type.Integer;
+        this.type = Type.Int;
     }
 
     public int getValue() {

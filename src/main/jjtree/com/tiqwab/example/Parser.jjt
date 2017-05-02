@@ -105,6 +105,7 @@ JBCNode Statements(): {
 
 JBCNode Statement(): {
     Token id;
+    Token type;
     JBCNode expression;
 } {
     (
@@ -112,8 +113,8 @@ JBCNode Statement(): {
             jjtThis.setJbcNode(new JBCEval((JBCExpr) expression));
         }
         |
-        <TYPE> id = <ID> <EQUAL> expression = Expression() <NEWLINE> {
-            jjtThis.setJbcNode(new JBCAssign(id.image, (JBCExpr) expression));
+        type = <TYPE> id = <ID> <EQUAL> expression = Expression() <NEWLINE> {
+            jjtThis.setJbcNode(new JBCAssign(id.image, type.image, (JBCExpr) expression));
         }
     ) {
         return jjtThis.getJbcNode();
