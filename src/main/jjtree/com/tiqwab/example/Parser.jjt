@@ -53,7 +53,7 @@ TOKEN: {
 // Type modifier
 // This declaration must appear before Id.
 TOKEN: {
-    < TYPE: ["int", "float"] >
+    < TYPE: "int" | "float" >
     | < VOID: "void" >
 }
 

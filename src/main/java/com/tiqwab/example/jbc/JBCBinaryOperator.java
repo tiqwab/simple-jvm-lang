@@ -1,6 +1,6 @@
 package com.tiqwab.example.jbc;
 
-public class JBCBinaryOperator implements JBCExpr {
+public class JBCBinaryOperator extends JBCNodeBase implements JBCExpr {
 
     private final String op;
     private final JBCNode lhs;

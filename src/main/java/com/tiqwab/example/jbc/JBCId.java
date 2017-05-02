@@ -1,6 +1,6 @@
 package com.tiqwab.example.jbc;
 
-public class JBCId implements JBCExpr {
+public class JBCId extends JBCNodeBase implements JBCExpr {
 
     private final String name;
 

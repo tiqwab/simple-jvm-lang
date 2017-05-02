@@ -1,6 +1,6 @@
 package com.tiqwab.example.jbc;
 
-public class JBCEval implements JBCStmt {
+public class JBCEval extends JBCNodeBase implements JBCStmt {
 
     private final JBCExpr expr;
 

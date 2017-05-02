@@ -1,6 +1,6 @@
 package com.tiqwab.example.jbc;
 
-public class JBCInteger implements JBCExpr {
+public class JBCInteger extends JBCNodeBase implements JBCExpr {
 
     private final int value;
 
