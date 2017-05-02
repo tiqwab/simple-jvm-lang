@@ -17,6 +17,20 @@ public class SampleVisitor implements ParserVisitor {
     }
 
     @Override
+    public Object visit(ASTStatements node, Object data) {
+        System.out.println("Statements:");
+        node.childrenAccept(this, data);
+        return data;
+    }
+
+    @Override
+    public Object visit(ASTStatement node, Object data) {
+        System.out.println("Statement:");
+        node.childrenAccept(this, data);
+        return data;
+    }
+
+    @Override
     public Object visit(ASTExpression node, Object data) {
         System.out.println("Expression!");
         node.childrenAccept(this, data);

@@ -47,6 +47,18 @@ TOKEN: {
 TOKEN: {
     < LPAREN: "(" >
     | <RPAREN: ")" >
+    | <EQUAL: "=" >
+}
+
+// Type modifier
+// This declaration must appear before Id.
+TOKEN: {
+    < VAR: "var" >
+}
+
+// Id
+TOKEN: {
+    < ID: ["a"-"z", "A"-"Z", "_"](["a"-"z", "A"-"Z", "_", "0"-"9"])* >
 }
 
 // Number
@@ -58,14 +70,49 @@ TOKEN: {
 
 // E -> T ("+" T | "-" T)*
 // T -> F ("*" T | "/" F)*
-// F -> N | "(" E ")"
+// F -> N | "(" E ")" | id
 
 SimpleNode Start(): {
+    JBCNode stmts;
+} {
+    // TODO: <EOF> not <NEWLINE>
+    stmts = Statements() <NEWLINE> {
+        jjtThis.setJbcNode(stmts);
+        return jjtThis;
+    }
+}
+
+JBCNode Statements(): {
+    JBCNode stmt;
+    JBCSeq seq;
+} {
+    stmt = Statement() {
+        seq = new JBCSeq((JBCStmt) stmt);
+        jjtThis.setJbcNode(seq);
+    } (
+        stmt = Statement() {
+            seq.setTail(new JBCSeq((JBCStmt) stmt));
+            seq = seq.getTail();
+        }
+    )* {
+        return jjtThis.getJbcNode();
+    }
+}
+
+JBCNode Statement(): {
+    Token id;
     JBCNode expression;
 } {
-    expression = Expression() <NEWLINE> {
-        jjtThis.setJbcNode(new JBCEval((JBCExpr) expression));
-        return jjtThis;
+    (
+        expression = Expression() <NEWLINE> {
+            jjtThis.setJbcNode(new JBCEval((JBCExpr) expression));
+        }
+        |
+        <VAR> id = <ID> <EQUAL> expression = Expression() <NEWLINE> {
+            jjtThis.setJbcNode(new JBCAssign(id.image, (JBCExpr) expression));
+        }
+    ) {
+        return jjtThis.getJbcNode();
     }
 }
 
@@ -103,6 +150,7 @@ JBCNode Term(): {
 
 JBCNode Factor(): {
     Token number;
+    Token id;
     JBCNode expr;
 } {
     number = <NUMBER> {
@@ -112,5 +160,9 @@ JBCNode Factor(): {
     | <LPAREN> expr = Expression() <RPAREN> {
         jjtThis.setJbcNode(expr);
         return expr;
+    }
+    | id = <ID> {
+        jjtThis.setJbcNode(new JBCId(id.image));
+        return jjtThis.getJbcNode();
     }
 }

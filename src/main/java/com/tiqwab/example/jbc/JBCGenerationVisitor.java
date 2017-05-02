@@ -1,6 +1,8 @@
 package com.tiqwab.example.jbc;
 
+import com.tiqwab.example.Environment;
 import com.tiqwab.example.GeneratedCode;
+import com.tiqwab.example.Symbol;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -10,6 +12,7 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
     private ClassWriter classWriter;
     private String generatedClassName;
     private GeneratedCode generatedCode;
+    private Environment env;
 
     private MethodVisitor mv;
 
@@ -31,6 +34,7 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
                 "java/lang/Object",
                 null
         );
+        this.env = new Environment();
     }
 
     /**
@@ -125,6 +129,17 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
     }
 
     @Override
+    public void visit(JBCSeq node) {
+
+    }
+
+    @Override
+    public void visit(JBCAssign node) {
+        final Symbol symbol = this.env.getOrNew(node.getName());
+        mv.visitVarInsn(Opcodes.ISTORE, symbol.getIndex());
+    }
+
+    @Override
     public void visit(JBCEval node) {
 
     }
@@ -157,6 +172,14 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
         } else {
             mv.visitLdcInsn(value);
         }
+    }
+
+    @Override
+    public void visit(JBCId node) {
+        final Symbol symbol = this.env.get(node.getName()).orElseThrow(
+                () -> new IllegalStateException(String.format("Cannot resolve symbol '%s'", node.getName()))
+        );
+        mv.visitVarInsn(Opcodes.ILOAD, symbol.getIndex());
     }
 
 }
