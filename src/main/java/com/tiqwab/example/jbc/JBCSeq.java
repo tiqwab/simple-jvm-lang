@@ -1,5 +1,7 @@
 package com.tiqwab.example.jbc;
 
+import com.tiqwab.example.symbol.Type;
+
 import java.util.Optional;
 
 public class JBCSeq extends JBCNodeBase implements JBCNode {
@@ -10,6 +12,7 @@ public class JBCSeq extends JBCNodeBase implements JBCNode {
     public JBCSeq(final JBCStmt stmt) {
         this.head = stmt;
         this.tail = Optional.empty();
+        this.type = Type.Void;
     }
 
     public JBCSeq getTail() {

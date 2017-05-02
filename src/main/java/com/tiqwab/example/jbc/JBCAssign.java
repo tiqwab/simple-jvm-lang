@@ -1,5 +1,7 @@
 package com.tiqwab.example.jbc;
 
+import com.tiqwab.example.symbol.Type;
+
 public class JBCAssign extends JBCNodeBase implements JBCStmt {
 
     private final String name;
@@ -8,6 +10,7 @@ public class JBCAssign extends JBCNodeBase implements JBCStmt {
     public JBCAssign(final String name, final JBCExpr expr) {
         this.name = name;
         this.expr = expr;
+        this.type = Type.Void;
     }
 
     @Override

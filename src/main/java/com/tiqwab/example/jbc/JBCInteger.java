@@ -1,11 +1,14 @@
 package com.tiqwab.example.jbc;
 
+import com.tiqwab.example.symbol.Type;
+
 public class JBCInteger extends JBCNodeBase implements JBCExpr {
 
     private final int value;
 
     public JBCInteger(final String value) {
         this.value = Integer.parseInt(value);
+        this.type = Type.Integer;
     }
 
     public int getValue() {
