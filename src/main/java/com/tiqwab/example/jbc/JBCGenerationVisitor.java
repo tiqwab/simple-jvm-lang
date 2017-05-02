@@ -135,7 +135,7 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
 
     @Override
     public void visit(JBCAssign node) {
-        final Symbol symbol = this.env.get(node.getName());
+        final Symbol symbol = this.env.getOrNew(node.getName());
         mv.visitVarInsn(Opcodes.ISTORE, symbol.getIndex());
     }
 
@@ -176,7 +176,9 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
 
     @Override
     public void visit(JBCId node) {
-        final Symbol symbol = this.env.get(node.getName());
+        final Symbol symbol = this.env.get(node.getName()).orElseThrow(
+                () -> new IllegalStateException(String.format("Cannot resolve symbol '%s'", node.getName()))
+        );
         mv.visitVarInsn(Opcodes.ILOAD, symbol.getIndex());
     }
 

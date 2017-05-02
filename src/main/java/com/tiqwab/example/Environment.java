@@ -2,6 +2,7 @@ package com.tiqwab.example;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class Environment {
 
@@ -17,8 +18,21 @@ public class Environment {
         this.env.put(name, symbol);
     }
 
-    public Symbol get(final String name) {
-        return this.env.getOrDefault(name, new Symbol(index++));
+    public Optional<Symbol> get(final String name) {
+        Symbol symbol = env.get(name);
+        if (symbol == null) {
+            return Optional.empty();
+        }
+        return Optional.of(symbol);
+    }
+
+    public Symbol getOrNew(final String name) {
+        Symbol symbol = env.get(name);
+        if (symbol == null) {
+            symbol = new Symbol(index++);
+            this.env.put(name, symbol);
+        }
+        return symbol;
     }
 
 }
