@@ -73,11 +73,29 @@ TOKEN: {
 // F -> N | "(" E ")" | id
 
 SimpleNode Start(): {
-    JBCNode stmt;
+    JBCNode stmts;
 } {
-    stmt = Statement() <NEWLINE> {
-        jjtThis.setJbcNode(stmt);
+    // TODO: <EOF> not <NEWLINE>
+    stmts = Statements() <NEWLINE> {
+        jjtThis.setJbcNode(stmts);
         return jjtThis;
+    }
+}
+
+JBCNode Statements(): {
+    JBCNode stmt;
+    JBCSeq seq;
+} {
+    stmt = Statement() {
+        seq = new JBCSeq((JBCStmt) stmt);
+        jjtThis.setJbcNode(seq);
+    } (
+        stmt = Statement() {
+            seq.setTail(new JBCSeq((JBCStmt) stmt));
+            seq = seq.getTail();
+        }
+    )* {
+        return jjtThis.getJbcNode();
     }
 }
 
@@ -86,11 +104,11 @@ JBCNode Statement(): {
     JBCNode expression;
 } {
     (
-        expression = Expression() {
+        expression = Expression() <NEWLINE> {
             jjtThis.setJbcNode(new JBCEval((JBCExpr) expression));
         }
         |
-        <VAR> id = <ID> <EQUAL> expression = Expression() {
+        <VAR> id = <ID> <EQUAL> expression = Expression() <NEWLINE> {
             jjtThis.setJbcNode(new JBCAssign(id.image, (JBCExpr) expression));
         }
     ) {
