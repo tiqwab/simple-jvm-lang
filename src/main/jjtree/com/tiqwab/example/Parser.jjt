@@ -53,7 +53,8 @@ TOKEN: {
 // Type modifier
 // This declaration must appear before Id.
 TOKEN: {
-    < VAR: "var" >
+    < TYPE: ["int", "float"] >
+    | < VOID: "void" >
 }
 
 // Id
@@ -111,7 +112,7 @@ JBCNode Statement(): {
             jjtThis.setJbcNode(new JBCEval((JBCExpr) expression));
         }
         |
-        <VAR> id = <ID> <EQUAL> expression = Expression() <NEWLINE> {
+        <TYPE> id = <ID> <EQUAL> expression = Expression() <NEWLINE> {
             jjtThis.setJbcNode(new JBCAssign(id.image, (JBCExpr) expression));
         }
     ) {
