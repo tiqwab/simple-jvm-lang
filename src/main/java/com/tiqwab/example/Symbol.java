@@ -1,11 +1,15 @@
 package com.tiqwab.example;
 
+import com.tiqwab.example.symbol.Type;
+
 public class Symbol {
 
     private final int index;
+    private final Type type;
 
-    public Symbol(final int index) {
+    public Symbol(final int index, final Type type) {
         this.index = index;
+        this.type = type;
     }
 
     public int getIndex() {
@@ -19,12 +23,15 @@ public class Symbol {
 
         Symbol symbol = (Symbol) o;
 
-        return index == symbol.index;
+        if (index != symbol.index) return false;
+        return type == symbol.type;
     }
 
     @Override
     public int hashCode() {
-        return index;
+        int result = index;
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        return result;
     }
 
     @Override

@@ -136,7 +136,7 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
 
     @Override
     public void visit(JBCAssign node) {
-        final Symbol symbol = this.env.getOrNew(node.getName());
+        final Symbol symbol = this.env.getOrNew(node.getName(), node.getType());
         mv.visitVarInsn(Opcodes.ISTORE, symbol.getIndex());
     }
 

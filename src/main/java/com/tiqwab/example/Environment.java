@@ -1,5 +1,7 @@
 package com.tiqwab.example;
 
+import com.tiqwab.example.symbol.Type;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -26,10 +28,10 @@ public class Environment {
         return Optional.of(symbol);
     }
 
-    public Symbol getOrNew(final String name) {
+    public Symbol getOrNew(final String name, final Type type) {
         Symbol symbol = env.get(name);
         if (symbol == null) {
-            symbol = new Symbol(index++);
+            symbol = new Symbol(index++, type);
             this.env.put(name, symbol);
         }
         return symbol;
