@@ -6,6 +6,7 @@ import com.tiqwab.example.Symbol;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 public class JBCGenerationVisitor implements JBCNodeVisitor {
 
@@ -172,6 +173,12 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
         } else {
             mv.visitLdcInsn(value);
         }
+    }
+
+    // TODO: Check how to apply float type
+    @Override
+    public void visit(JBCFloat node) {
+        mv.visitLdcInsn(new Float(node.getValue()));
     }
 
     @Override
