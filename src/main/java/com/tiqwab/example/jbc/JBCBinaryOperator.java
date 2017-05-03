@@ -10,6 +10,8 @@ public class JBCBinaryOperator extends JBCNodeBase implements JBCExpr {
         this.op = op;
         this.lhs = lhs;
         this.rhs = rhs;
+        // FIXME: Calc by both terms
+        this.type = lhs.getType();
     }
 
     public String getOp() {

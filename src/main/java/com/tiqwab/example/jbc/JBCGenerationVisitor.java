@@ -149,14 +149,15 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
     // TODO: Code generation should be performed in JBCNode? e.g. JBCNode#gen(MethodVisitor mv)
     @Override
     public void visit(JBCBinaryOperator node) {
+        Type type = node.getType();
         if (node.getOp().equals("+")) {
-            mv.visitInsn(Opcodes.IADD);
+            mv.visitInsn(type.getAddCode());
         } else if (node.getOp().equals("-")) {
-            mv.visitInsn(Opcodes.ISUB);
+            mv.visitInsn(type.getSubCode());
         } else if (node.getOp().equals("*")) {
-            mv.visitInsn(Opcodes.IMUL);
+            mv.visitInsn(type.getMulCode());
         } else if (node.getOp().equals("/")) {
-            mv.visitInsn(Opcodes.IDIV);
+            mv.visitInsn(type.getDivCode());
         } else {
             throw new IllegalArgumentException("unknown op: " + node.getOp());
         }
