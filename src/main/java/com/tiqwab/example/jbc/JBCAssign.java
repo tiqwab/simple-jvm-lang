@@ -1,6 +1,9 @@
 package com.tiqwab.example.jbc;
 
+import com.tiqwab.example.Environment;
+import com.tiqwab.example.Symbol;
 import com.tiqwab.example.symbol.Type;
+import org.objectweb.asm.MethodVisitor;
 
 import java.util.Optional;
 
@@ -30,6 +33,13 @@ public class JBCAssign extends JBCNodeBase implements JBCStmt {
     public void accept(JBCNodeVisitor visitor) {
         this.expr.accept(visitor);
         visitor.visit(this);
+    }
+
+    @Override
+    public void genCode(MethodVisitor mv, Environment env) {
+        Type varType = this.getVarType().orElseThrow(() -> new IllegalArgumentException("Type modifier does not appear?"));
+        final Symbol symbol = env.getOrNew(this.getName(), varType);
+        mv.visitVarInsn(varType.getStoreCode(), symbol.getIndex());
     }
 
     public String getName() {

@@ -136,62 +136,29 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
 
     @Override
     public void visit(JBCAssign node) {
-        Type varType = node.getVarType().orElseThrow(() -> new IllegalArgumentException("Type modifier does not appear?"));
-        final Symbol symbol = this.env.getOrNew(node.getName(), varType);
-        mv.visitVarInsn(varType.getStoreCode(), symbol.getIndex());
+        node.genCode(mv, env);
     }
 
     @Override
     public void visit(JBCEval node) {
-
+        node.genCode(mv, env);
     }
 
-    // TODO: Code generation should be performed in JBCNode? e.g. JBCNode#gen(MethodVisitor mv)
     @Override
     public void visit(JBCBinaryOperator node) {
-        Type type = node.getType();
-        if (node.getOp().equals("+")) {
-            mv.visitInsn(type.getAddCode());
-        } else if (node.getOp().equals("-")) {
-            mv.visitInsn(type.getSubCode());
-        } else if (node.getOp().equals("*")) {
-            mv.visitInsn(type.getMulCode());
-        } else if (node.getOp().equals("/")) {
-            mv.visitInsn(type.getDivCode());
-        } else {
-            throw new IllegalArgumentException("unknown op: " + node.getOp());
-        }
+        node.genCode(mv, env);
     }
 
-    // TODO: Code generation should be performed in JBCNode? e.g. JBCNode#gen(MethodVisitor mv)
     @Override
     public void visit(JBCInteger node) {
-        final int value = node.getValue();
-        // The generated code is determined by the necessary size (byte) of integer.
-        if (-128 <= value && value < 128) {
-            mv.visitIntInsn(Opcodes.BIPUSH, node.getValue());
-        } else if (-32768 <= value && value < 32768){
-            mv.visitIntInsn(Opcodes.SIPUSH, node.getValue());
-        } else {
-            mv.visitLdcInsn(value);
-        }
-        Type.widen(mv, node.getType(), node.getWidenedType());
     }
 
-    // TODO: Check how to apply float type
     @Override
     public void visit(JBCFloat node) {
-        mv.visitLdcInsn(new Float(node.getValue()));
-        Type.widen(mv, node.getType(), node.getWidenedType());
     }
 
     @Override
     public void visit(JBCId node) {
-        final Symbol symbol = this.env.get(node.getName()).orElseThrow(
-                () -> new IllegalStateException(String.format("Cannot resolve symbol '%s'", node.getName()))
-        );
-        mv.visitVarInsn(Opcodes.ILOAD, symbol.getIndex());
-        Type.widen(mv, node.getType(), node.getWidenedType());
     }
 
 }
