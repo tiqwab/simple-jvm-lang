@@ -127,10 +127,10 @@ JBCNode Expression(): {
 } {
     term1 = Term() { jjtThis.setJbcNode(term1); } (
         <ADD> term2 = Term() {
-            jjtThis.setJbcNode(new JBCBinaryOperator("+", jjtThis.getJbcNode(), term2));
+            jjtThis.setJbcNode(new JBCBinaryOperator("+", (JBCExpr) jjtThis.getJbcNode(), (JBCExpr) term2));
         }
         | <SUBTRACT> term2 = Term() {
-            jjtThis.setJbcNode(new JBCBinaryOperator("-", jjtThis.getJbcNode(), term2));
+            jjtThis.setJbcNode(new JBCBinaryOperator("-", (JBCExpr) jjtThis.getJbcNode(), (JBCExpr) term2));
         }
     )* {
         return jjtThis.getJbcNode();
@@ -143,10 +143,10 @@ JBCNode Term(): {
 } {
     factor1 = Factor() { jjtThis.setJbcNode(factor1); } ( 
         <MULT> factor2 = Factor() {
-            jjtThis.setJbcNode(new JBCBinaryOperator("*", jjtThis.getJbcNode(), factor2));
+            jjtThis.setJbcNode(new JBCBinaryOperator("*", (JBCExpr) jjtThis.getJbcNode(), (JBCExpr) factor2));
         }
         | <DIV> factor2 = Factor() {
-            jjtThis.setJbcNode(new JBCBinaryOperator("/", jjtThis.getJbcNode(), factor2));
+            jjtThis.setJbcNode(new JBCBinaryOperator("/", (JBCExpr) jjtThis.getJbcNode(), (JBCExpr) factor2));
         }
     )* {
         return jjtThis.getJbcNode();

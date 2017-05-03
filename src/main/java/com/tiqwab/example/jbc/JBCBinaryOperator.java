@@ -5,10 +5,10 @@ import com.tiqwab.example.symbol.Type;
 public class JBCBinaryOperator extends JBCNodeBase implements JBCExpr {
 
     private final String op;
-    private final JBCNode lhs;
-    private final JBCNode rhs;
+    private final JBCExpr lhs;
+    private final JBCExpr rhs;
 
-    public JBCBinaryOperator(final String op, final JBCNode lhs, final JBCNode rhs) {
+    public JBCBinaryOperator(final String op, final JBCExpr lhs, final JBCExpr rhs) {
         this.op = op;
         this.lhs = lhs;
         this.rhs = rhs;
