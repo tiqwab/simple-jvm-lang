@@ -9,11 +9,12 @@ import java.util.Optional;
 
 public enum Type {
 
-    Int(Opcodes.ISTORE, Opcodes.IADD, Opcodes.ISUB, Opcodes.IMUL, Opcodes.IDIV),
-    Float(Opcodes.FSTORE, Opcodes.FADD, Opcodes.FSUB, Opcodes.FMUL, Opcodes.FDIV),
-    Void(-1, -1, -1, -1, -1);
+    Int(Opcodes.ISTORE, Opcodes.ILOAD, Opcodes.IADD, Opcodes.ISUB, Opcodes.IMUL, Opcodes.IDIV),
+    Float(Opcodes.FSTORE, Opcodes.FLOAD, Opcodes.FADD, Opcodes.FSUB, Opcodes.FMUL, Opcodes.FDIV),
+    Void(-1, -1, -1, -1, -1, -1);
 
     private final int storeCode;
+    private final int loadCode;
     private final int addCode;
     private final int subCode;
     private final int mulCode;
@@ -22,8 +23,9 @@ public enum Type {
     private static final Map<Pair<Type, Type>, Type> maxMap;
     private static final Map<Pair<Type, Type>, Integer> widenMap;
 
-    Type(final int storeCode, final int addCode, final int subCode, final int mulCode, final int divCode) {
+    Type(final int storeCode, final int loadCode, final int addCode, final int subCode, final int mulCode, final int divCode) {
         this.storeCode = storeCode;
+        this.loadCode = loadCode;
         this.addCode = addCode;
         this.subCode = subCode;
         this.mulCode = mulCode;
@@ -66,6 +68,10 @@ public enum Type {
 
     public int getStoreCode() {
         return this.storeCode;
+    }
+
+    public int getLoadCode() {
+        return this.loadCode;
     }
 
     public int getAddCode() {

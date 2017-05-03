@@ -44,7 +44,7 @@ public class JBCId extends JBCExprBase {
         final Symbol symbol = env.get(this.getName()).orElseThrow(
                 () -> new IllegalStateException(String.format("Cannot resolve symbol '%s'", this.getName()))
         );
-        mv.visitVarInsn(Opcodes.ILOAD, symbol.getIndex());
+        mv.visitVarInsn(symbol.getType().getLoadCode(), symbol.getIndex());
         Type.widen(mv, this.getType(env), this.getWidenedType());
     }
 
