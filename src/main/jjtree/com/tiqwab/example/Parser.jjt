@@ -63,14 +63,17 @@ TOKEN: {
 
 // Number
 TOKEN: {
-    < NUMBER: (["0"-"9"])+ >
+    < INTEGER: (["0"-"9"])+ >
+    | < FLOAT: (["0"-"9"])*"."(["0"-"9"])+ >
 }
 
 // --- Translation Scheme ---
 
 // E -> T ("+" T | "-" T)*
 // T -> F ("*" T | "/" F)*
-// F -> N | "(" E ")" | id
+// F -> N | R | "(" E ")" | id
+// N -> <int>
+// R -> <float>
 
 SimpleNode Start(): {
     JBCNode stmts;
@@ -153,8 +156,12 @@ JBCNode Factor(): {
     Token id;
     JBCNode expr;
 } {
-    number = <NUMBER> {
+    number = <INTEGER> {
         jjtThis.setJbcNode(new JBCInteger(number.image));
+        return jjtThis.getJbcNode();
+    }
+    | number = <FLOAT> {
+        jjtThis.setJbcNode(new JBCFloat(number.image));
         return jjtThis.getJbcNode();
     }
     | <LPAREN> expr = Expression() <RPAREN> {
