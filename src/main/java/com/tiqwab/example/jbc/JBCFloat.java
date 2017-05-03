@@ -31,7 +31,7 @@ public class JBCFloat extends JBCExprBase {
     @Override
     public void genCode(MethodVisitor mv, Environment env) {
         mv.visitLdcInsn(new Float(this.getValue()));
-        Type.widen(mv, this.getType(), this.getWidenedType());
+        Type.widen(mv, this.getType(env), this.getWidenedType());
     }
 
 }

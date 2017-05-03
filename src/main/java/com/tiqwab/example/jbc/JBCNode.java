@@ -8,7 +8,6 @@ public interface JBCNode {
 
     public void accept(JBCNodeVisitor visitor);
     public void genCode(MethodVisitor mv, Environment env);
-    public Type getType();
-    public void setType(Type type);
+    public Type getType(Environment env);
 
 }

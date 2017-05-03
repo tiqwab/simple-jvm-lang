@@ -146,7 +146,6 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
 
     @Override
     public void visit(JBCBinaryOperator node) {
-        node.genCode(mv, env);
     }
 
     @Override

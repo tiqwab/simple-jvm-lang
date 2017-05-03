@@ -19,6 +19,17 @@ public class JBCId extends JBCExprBase {
     }
 
     @Override
+    public Type getType(Environment env) {
+        if (this.type == null) {
+            final Symbol symbol = env.get(this.name).orElseThrow(
+                    () -> new IllegalStateException("Cannot resolve: " + this.name)
+            );
+            this.type = symbol.getType();
+        }
+        return this.type;
+    }
+
+    @Override
     public String toString() {
         return String.format("JBCId{name=%s}", this.name);
     }
@@ -34,7 +45,7 @@ public class JBCId extends JBCExprBase {
                 () -> new IllegalStateException(String.format("Cannot resolve symbol '%s'", this.getName()))
         );
         mv.visitVarInsn(Opcodes.ILOAD, symbol.getIndex());
-        Type.widen(mv, this.getType(), this.getWidenedType());
+        Type.widen(mv, this.getType(env), this.getWidenedType());
     }
 
 }
