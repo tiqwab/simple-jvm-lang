@@ -36,4 +36,8 @@ public class JBCAssign extends JBCNodeBase implements JBCStmt {
         return this.name;
     }
 
+    public Optional<Type> getVarType() {
+        return this.varType;
+    }
+
 }

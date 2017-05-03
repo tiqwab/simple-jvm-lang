@@ -3,10 +3,10 @@ package com.tiqwab.example.jbc;
 import com.tiqwab.example.Environment;
 import com.tiqwab.example.GeneratedCode;
 import com.tiqwab.example.Symbol;
+import com.tiqwab.example.symbol.Type;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
 
 public class JBCGenerationVisitor implements JBCNodeVisitor {
 
@@ -136,8 +136,9 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
 
     @Override
     public void visit(JBCAssign node) {
-        final Symbol symbol = this.env.getOrNew(node.getName(), node.getType());
-        mv.visitVarInsn(Opcodes.ISTORE, symbol.getIndex());
+        Type varType = node.getVarType().orElseThrow(() -> new IllegalArgumentException("Type modifier does not appear?"));
+        final Symbol symbol = this.env.getOrNew(node.getName(), varType);
+        mv.visitVarInsn(varType.getStoreCode(), symbol.getIndex());
     }
 
     @Override
