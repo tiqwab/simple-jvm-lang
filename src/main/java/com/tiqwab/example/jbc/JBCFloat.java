@@ -1,11 +1,14 @@
 package com.tiqwab.example.jbc;
 
-public class JBCFloat implements JBCExpr {
+import com.tiqwab.example.symbol.Type;
+
+public class JBCFloat extends JBCNodeBase implements JBCExpr {
 
     private final float value;
 
     public JBCFloat(final String value) {
         this.value = Float.parseFloat(value);
+        this.type = Type.Float;
     }
 
     public float getValue() {
