@@ -1,5 +1,6 @@
 package com.tiqwab.example.symbol;
 
+import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 import java.util.HashMap;
@@ -19,6 +20,7 @@ public enum Type {
     private final int divCode;
 
     private static final Map<Pair<Type, Type>, Type> maxMap;
+    private static final Map<Pair<Type, Type>, Integer> widenMap;
 
     Type(final int storeCode, final int addCode, final int subCode, final int mulCode, final int divCode) {
         this.storeCode = storeCode;
@@ -34,6 +36,9 @@ public enum Type {
         maxMap.put(new Pair(Type.Float, Type.Float), Type.Float);
         maxMap.put(new Pair(Type.Int, Type.Float), Type.Float);
         maxMap.put(new Pair(Type.Float, Type.Int), Type.Float);
+
+        widenMap = new HashMap<>();
+        widenMap.put(new Pair(Type.Int, Type.Float), Opcodes.I2F);
     }
 
     public static Type of(final String typeName) {
@@ -51,6 +56,12 @@ public enum Type {
             return Optional.empty();
         }
         return Optional.of(type);
+    }
+
+    public static void widen(MethodVisitor mv, Type type, Type widenedType) {
+        final Integer convertCode = widenMap.get(new Pair(type, widenedType));
+        if (convertCode == null) return;
+        mv.visitInsn(convertCode);
     }
 
     public int getStoreCode() {

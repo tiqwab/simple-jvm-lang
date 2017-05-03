@@ -175,12 +175,14 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
         } else {
             mv.visitLdcInsn(value);
         }
+        Type.widen(mv, node.getType(), node.getWidenedType());
     }
 
     // TODO: Check how to apply float type
     @Override
     public void visit(JBCFloat node) {
         mv.visitLdcInsn(new Float(node.getValue()));
+        Type.widen(mv, node.getType(), node.getWidenedType());
     }
 
     @Override
@@ -189,6 +191,7 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
                 () -> new IllegalStateException(String.format("Cannot resolve symbol '%s'", node.getName()))
         );
         mv.visitVarInsn(Opcodes.ILOAD, symbol.getIndex());
+        Type.widen(mv, node.getType(), node.getWidenedType());
     }
 
 }

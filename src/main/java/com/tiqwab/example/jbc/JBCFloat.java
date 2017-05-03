@@ -2,7 +2,7 @@ package com.tiqwab.example.jbc;
 
 import com.tiqwab.example.symbol.Type;
 
-public class JBCFloat extends JBCNodeBase implements JBCExpr {
+public class JBCFloat extends JBCExprBase {
 
     private final float value;
 

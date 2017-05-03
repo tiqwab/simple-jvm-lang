@@ -2,7 +2,7 @@ package com.tiqwab.example.jbc;
 
 import com.tiqwab.example.symbol.Type;
 
-public class JBCInteger extends JBCNodeBase implements JBCExpr {
+public class JBCInteger extends JBCExprBase {
 
     private final int value;
 
