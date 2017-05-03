@@ -1,5 +1,7 @@
 package com.tiqwab.example.jbc;
 
+import com.tiqwab.example.symbol.Type;
+
 public class JBCBinaryOperator extends JBCNodeBase implements JBCExpr {
 
     private final String op;
@@ -10,8 +12,9 @@ public class JBCBinaryOperator extends JBCNodeBase implements JBCExpr {
         this.op = op;
         this.lhs = lhs;
         this.rhs = rhs;
-        // FIXME: Calc by both terms
-        this.type = lhs.getType();
+        this.type = Type.max(lhs.getType(), rhs.getType()).orElseThrow(
+                () -> new IllegalStateException(String.format("Cannot apply operation. lhs: %s, op: %s, rhs: %s", lhs, op, rhs))
+        );
     }
 
     public String getOp() {
