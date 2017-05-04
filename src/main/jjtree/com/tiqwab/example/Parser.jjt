@@ -72,9 +72,11 @@ TOKEN: {
 
 // S -> S'+
 // S' -> <TYPE> <ID> "=" E | E
-// E -> T ("+" T | "-" T)*
+// E -> T ("+" T | "-" T)* | R ( "||" R)*
 // T -> F ("*" T | "/" F)*
 // F -> <INTEGER> | <FLOAT> | "(" E ")" | <ID>
+// R -> B ("&&" R)*
+// B -> <TRUE> | <FALSE> | "!" B | "(" E ")" | <ID>
 
 SimpleNode Start(): {
     JBCNode stmts;
