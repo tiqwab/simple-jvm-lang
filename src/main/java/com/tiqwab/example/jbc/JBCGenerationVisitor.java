@@ -141,7 +141,7 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
 
     @Override
     public void visit(JBCIf node) {
-
+        node.genCode(mv, env);
     }
 
     @Override
