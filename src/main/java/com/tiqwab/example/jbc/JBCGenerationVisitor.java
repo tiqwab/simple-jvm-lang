@@ -160,4 +160,19 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
     public void visit(JBCId node) {
     }
 
+    @Override
+    public void visit(JBCTrue node) {
+
+    }
+
+    @Override
+    public void visit(JBCFalse node) {
+
+    }
+
+    @Override
+    public void visit(JBCNot node) {
+
+    }
+
 }

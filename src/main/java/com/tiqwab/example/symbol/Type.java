@@ -11,6 +11,7 @@ public enum Type {
 
     Int(Opcodes.ISTORE, Opcodes.ILOAD, Opcodes.IADD, Opcodes.ISUB, Opcodes.IMUL, Opcodes.IDIV),
     Float(Opcodes.FSTORE, Opcodes.FLOAD, Opcodes.FADD, Opcodes.FSUB, Opcodes.FMUL, Opcodes.FDIV),
+    Bool(Opcodes.ISTORE, Opcodes.ILOAD, -1, -1, -1, -1),
     Void(-1, -1, -1, -1, -1, -1);
 
     private final int storeCode;
@@ -38,6 +39,7 @@ public enum Type {
         maxMap.put(new Pair(Type.Float, Type.Float), Type.Float);
         maxMap.put(new Pair(Type.Int, Type.Float), Type.Float);
         maxMap.put(new Pair(Type.Float, Type.Int), Type.Float);
+        maxMap.put(new Pair(Type.Bool, Type.Bool), Type.Bool);
 
         widenMap = new HashMap<>();
         widenMap.put(new Pair(Type.Int, Type.Float), Opcodes.I2F);

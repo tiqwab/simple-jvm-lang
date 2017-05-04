@@ -35,7 +35,12 @@ TOKEN: {
     < NEWLINE: "\n" >
 }
 
-// Operator
+// Unary operator
+TOKEN: {
+    < NOT: "!" >
+}
+
+// Binary operator
 TOKEN: {
     < ADD: "+" >
     | < SUBTRACT: "-" >
@@ -46,20 +51,15 @@ TOKEN: {
 // Symbols
 TOKEN: {
     < LPAREN: "(" >
-    | <RPAREN: ")" >
-    | <EQUAL: "=" >
+    | < RPAREN: ")" >
+    | < ASSIGN: "=" >
 }
 
 // Type modifier
 // This declaration must appear before Id.
 TOKEN: {
-    < TYPE: "int" | "float" >
+    < TYPE: "int" | "float" | "bool" >
     | < VOID: "void" >
-}
-
-// Id
-TOKEN: {
-    < ID: ["a"-"z", "A"-"Z", "_"](["a"-"z", "A"-"Z", "_", "0"-"9"])* >
 }
 
 // Number
@@ -68,13 +68,24 @@ TOKEN: {
     | < FLOAT: (["0"-"9"])*"."(["0"-"9"])+ >
 }
 
+// Bool
+TOKEN: {
+    < TRUE: "true" >
+    | <FALSE: "false" >
+}
+
+// Id
+TOKEN: {
+    < ID: ["a"-"z", "A"-"Z", "_"](["a"-"z", "A"-"Z", "_", "0"-"9"])* >
+}
+
 // --- Translation Scheme ---
 
+// S -> S'+
+// S' -> <TYPE> <ID> "=" E | E
 // E -> T ("+" T | "-" T)*
 // T -> F ("*" T | "/" F)*
-// F -> N | R | "(" E ")" | id
-// N -> <int>
-// R -> <float>
+// F -> <INTEGER> | <FLOAT> | "(" E ")" | <ID> | <TRUE> | <FALSE> | "!" F
 
 SimpleNode Start(): {
     JBCNode stmts;
@@ -113,7 +124,7 @@ JBCNode Statement(): {
             jjtThis.setJbcNode(new JBCEval((JBCExpr) expression));
         }
         |
-        type = <TYPE> id = <ID> <EQUAL> expression = Expression() <NEWLINE> {
+        type = <TYPE> id = <ID> <ASSIGN> expression = Expression() <NEWLINE> {
             jjtThis.setJbcNode(new JBCAssign(id.image, type.image, (JBCExpr) expression));
         }
     ) {
@@ -155,8 +166,10 @@ JBCNode Term(): {
 
 JBCNode Factor(): {
     Token number;
+    Token bool;
     Token id;
     JBCNode expr;
+    JBCNode factor;
 } {
     number = <INTEGER> {
         jjtThis.setJbcNode(new JBCInteger(number.image));
@@ -169,6 +182,18 @@ JBCNode Factor(): {
     | <LPAREN> expr = Expression() <RPAREN> {
         jjtThis.setJbcNode(expr);
         return expr;
+    }
+    | bool = <TRUE> {
+        jjtThis.setJbcNode(new JBCTrue());
+        return jjtThis.getJbcNode();
+    }
+    | bool = <FALSE> {
+        jjtThis.setJbcNode(new JBCFalse());
+        return jjtThis.getJbcNode();
+    }
+    | <NOT> factor = Factor() {
+        jjtThis.setJbcNode(new JBCNot((JBCExpr) factor));
+        return jjtThis.getJbcNode();
     }
     | id = <ID> {
         jjtThis.setJbcNode(new JBCId(id.image));
