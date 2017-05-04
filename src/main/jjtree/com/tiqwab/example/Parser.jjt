@@ -46,8 +46,8 @@ TOKEN: {
 // Symbols
 TOKEN: {
     < LPAREN: "(" >
-    | <RPAREN: ")" >
-    | <EQUAL: "=" >
+    | < RPAREN: ")" >
+    | < ASSIGN: "=" >
 }
 
 // Type modifier
@@ -113,7 +113,7 @@ JBCNode Statement(): {
             jjtThis.setJbcNode(new JBCEval((JBCExpr) expression));
         }
         |
-        type = <TYPE> id = <ID> <EQUAL> expression = Expression() <NEWLINE> {
+        type = <TYPE> id = <ID> <ASSIGN> expression = Expression() <NEWLINE> {
             jjtThis.setJbcNode(new JBCAssign(id.image, type.image, (JBCExpr) expression));
         }
     ) {
