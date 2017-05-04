@@ -3,10 +3,10 @@ package com.tiqwab.example.jbc;
 import com.tiqwab.example.Environment;
 import com.tiqwab.example.GeneratedCode;
 import com.tiqwab.example.Symbol;
+import com.tiqwab.example.symbol.Type;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
 
 public class JBCGenerationVisitor implements JBCNodeVisitor {
 
@@ -136,57 +136,28 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
 
     @Override
     public void visit(JBCAssign node) {
-        final Symbol symbol = this.env.getOrNew(node.getName());
-        mv.visitVarInsn(Opcodes.ISTORE, symbol.getIndex());
+        node.genCode(mv, env);
     }
 
     @Override
     public void visit(JBCEval node) {
-
+        node.genCode(mv, env);
     }
 
-    // TODO: Code generation should be performed in JBCNode? e.g. JBCNode#gen(MethodVisitor mv)
     @Override
     public void visit(JBCBinaryOperator node) {
-        if (node.getOp().equals("+")) {
-            mv.visitInsn(Opcodes.IADD);
-        } else if (node.getOp().equals("-")) {
-            mv.visitInsn(Opcodes.ISUB);
-        } else if (node.getOp().equals("*")) {
-            mv.visitInsn(Opcodes.IMUL);
-        } else if (node.getOp().equals("/")) {
-            mv.visitInsn(Opcodes.IDIV);
-        } else {
-            throw new IllegalArgumentException("unknown op: " + node.getOp());
-        }
     }
 
-    // TODO: Code generation should be performed in JBCNode? e.g. JBCNode#gen(MethodVisitor mv)
     @Override
     public void visit(JBCInteger node) {
-        final int value = node.getValue();
-        // The generated code is determined by the necessary size (byte) of integer.
-        if (-128 <= value && value < 128) {
-            mv.visitIntInsn(Opcodes.BIPUSH, node.getValue());
-        } else if (-32768 <= value && value < 32768){
-            mv.visitIntInsn(Opcodes.SIPUSH, node.getValue());
-        } else {
-            mv.visitLdcInsn(value);
-        }
     }
 
-    // TODO: Check how to apply float type
     @Override
     public void visit(JBCFloat node) {
-        mv.visitLdcInsn(new Float(node.getValue()));
     }
 
     @Override
     public void visit(JBCId node) {
-        final Symbol symbol = this.env.get(node.getName()).orElseThrow(
-                () -> new IllegalStateException(String.format("Cannot resolve symbol '%s'", node.getName()))
-        );
-        mv.visitVarInsn(Opcodes.ILOAD, symbol.getIndex());
     }
 
 }

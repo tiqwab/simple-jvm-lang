@@ -53,7 +53,8 @@ TOKEN: {
 // Type modifier
 // This declaration must appear before Id.
 TOKEN: {
-    < VAR: "var" >
+    < TYPE: "int" | "float" >
+    | < VOID: "void" >
 }
 
 // Id
@@ -104,6 +105,7 @@ JBCNode Statements(): {
 
 JBCNode Statement(): {
     Token id;
+    Token type;
     JBCNode expression;
 } {
     (
@@ -111,8 +113,8 @@ JBCNode Statement(): {
             jjtThis.setJbcNode(new JBCEval((JBCExpr) expression));
         }
         |
-        <VAR> id = <ID> <EQUAL> expression = Expression() <NEWLINE> {
-            jjtThis.setJbcNode(new JBCAssign(id.image, (JBCExpr) expression));
+        type = <TYPE> id = <ID> <EQUAL> expression = Expression() <NEWLINE> {
+            jjtThis.setJbcNode(new JBCAssign(id.image, type.image, (JBCExpr) expression));
         }
     ) {
         return jjtThis.getJbcNode();
@@ -125,10 +127,10 @@ JBCNode Expression(): {
 } {
     term1 = Term() { jjtThis.setJbcNode(term1); } (
         <ADD> term2 = Term() {
-            jjtThis.setJbcNode(new JBCBinaryOperator("+", jjtThis.getJbcNode(), term2));
+            jjtThis.setJbcNode(new JBCBinaryOperator("+", (JBCExpr) jjtThis.getJbcNode(), (JBCExpr) term2));
         }
         | <SUBTRACT> term2 = Term() {
-            jjtThis.setJbcNode(new JBCBinaryOperator("-", jjtThis.getJbcNode(), term2));
+            jjtThis.setJbcNode(new JBCBinaryOperator("-", (JBCExpr) jjtThis.getJbcNode(), (JBCExpr) term2));
         }
     )* {
         return jjtThis.getJbcNode();
@@ -141,10 +143,10 @@ JBCNode Term(): {
 } {
     factor1 = Factor() { jjtThis.setJbcNode(factor1); } ( 
         <MULT> factor2 = Factor() {
-            jjtThis.setJbcNode(new JBCBinaryOperator("*", jjtThis.getJbcNode(), factor2));
+            jjtThis.setJbcNode(new JBCBinaryOperator("*", (JBCExpr) jjtThis.getJbcNode(), (JBCExpr) factor2));
         }
         | <DIV> factor2 = Factor() {
-            jjtThis.setJbcNode(new JBCBinaryOperator("/", jjtThis.getJbcNode(), factor2));
+            jjtThis.setJbcNode(new JBCBinaryOperator("/", (JBCExpr) jjtThis.getJbcNode(), (JBCExpr) factor2));
         }
     )* {
         return jjtThis.getJbcNode();

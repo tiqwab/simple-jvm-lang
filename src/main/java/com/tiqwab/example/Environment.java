@@ -1,5 +1,7 @@
 package com.tiqwab.example;
 
+import com.tiqwab.example.symbol.Type;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -26,12 +28,25 @@ public class Environment {
         return Optional.of(symbol);
     }
 
-    public Symbol getOrNew(final String name) {
+    public Symbol getOrNew(final String name, final Type type) {
         Symbol symbol = env.get(name);
         if (symbol == null) {
-            symbol = new Symbol(index++);
-            this.env.put(name, symbol);
+            symbol = new Symbol(index++, type);
+            this.put(name, symbol);
         }
+        return symbol;
+    }
+
+    public boolean exists(final String name) {
+        return env.containsKey(name);
+    }
+
+    public Symbol newSymbol(final String name, final Type varType) {
+        if (this.exists(name)) {
+            throw new IllegalArgumentException("Alreday exists: " + name);
+        }
+        final Symbol symbol = new Symbol(index++, varType);
+        this.put(name, symbol);
         return symbol;
     }
 

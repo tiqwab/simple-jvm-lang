@@ -1,6 +1,12 @@
 package com.tiqwab.example.jbc;
 
-public class JBCId implements JBCExpr {
+import com.tiqwab.example.Environment;
+import com.tiqwab.example.Symbol;
+import com.tiqwab.example.symbol.Type;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+
+public class JBCId extends JBCExprBase {
 
     private final String name;
 
@@ -13,6 +19,17 @@ public class JBCId implements JBCExpr {
     }
 
     @Override
+    public Type getType(Environment env) {
+        if (this.type == null) {
+            final Symbol symbol = env.get(this.name).orElseThrow(
+                    () -> new IllegalStateException("Cannot resolve: " + this.name)
+            );
+            this.type = symbol.getType();
+        }
+        return this.type;
+    }
+
+    @Override
     public String toString() {
         return String.format("JBCId{name=%s}", this.name);
     }
@@ -20,6 +37,15 @@ public class JBCId implements JBCExpr {
     @Override
     public void accept(JBCNodeVisitor visitor) {
         visitor.visit(this);
+    }
+
+    @Override
+    public void genCode(MethodVisitor mv, Environment env) {
+        final Symbol symbol = env.get(this.getName()).orElseThrow(
+                () -> new IllegalStateException(String.format("Cannot resolve symbol '%s'", this.getName()))
+        );
+        mv.visitVarInsn(symbol.getType().getLoadCode(), symbol.getIndex());
+        Type.widen(mv, this.getType(env), this.getWidenedType());
     }
 
 }
