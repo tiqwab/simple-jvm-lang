@@ -32,8 +32,21 @@ public class Environment {
         Symbol symbol = env.get(name);
         if (symbol == null) {
             symbol = new Symbol(index++, type);
-            this.env.put(name, symbol);
+            this.put(name, symbol);
         }
+        return symbol;
+    }
+
+    public boolean exists(final String name) {
+        return env.containsKey(name);
+    }
+
+    public Symbol newSymbol(final String name, final Type varType) {
+        if (this.exists(name)) {
+            throw new IllegalArgumentException("Alreday exists: " + name);
+        }
+        final Symbol symbol = new Symbol(index++, varType);
+        this.put(name, symbol);
         return symbol;
     }
 

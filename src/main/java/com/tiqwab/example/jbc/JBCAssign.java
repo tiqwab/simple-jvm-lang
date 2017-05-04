@@ -40,10 +40,15 @@ public class JBCAssign extends JBCNodeBase implements JBCStmt {
         this.expr.genCode(mv, env);
 
         Type varType = this.getVarType().orElseThrow(() -> new IllegalArgumentException("Type modifier does not appear?"));
+        // Check the consistence of the declared type and actual expression's type
         if (varType != this.expr.getType(env)) {
             throw new IllegalStateException(this.expr.getType(env) + " cannot be " + varType);
         }
-        final Symbol symbol = env.getOrNew(this.getName(), varType);
+        // Avoid initialize variable twice
+        if (env.exists(this.getName())) {
+            throw new IllegalStateException("Variable '" + this.getName() + "' is already declared");
+        }
+        final Symbol symbol = env.newSymbol(this.getName(), varType);
         mv.visitVarInsn(varType.getStoreCode(), symbol.getIndex());
     }
 
