@@ -62,11 +62,6 @@ TOKEN: {
     | < VOID: "void" >
 }
 
-// Id
-TOKEN: {
-    < ID: ["a"-"z", "A"-"Z", "_"](["a"-"z", "A"-"Z", "_", "0"-"9"])* >
-}
-
 // Number
 TOKEN: {
     < INTEGER: (["0"-"9"])+ >
@@ -77,6 +72,11 @@ TOKEN: {
 TOKEN: {
     < TRUE: "true" >
     | <FALSE: "false" >
+}
+
+// Id
+TOKEN: {
+    < ID: ["a"-"z", "A"-"Z", "_"](["a"-"z", "A"-"Z", "_", "0"-"9"])* >
 }
 
 // --- Translation Scheme ---
@@ -166,8 +166,10 @@ JBCNode Term(): {
 
 JBCNode Factor(): {
     Token number;
+    Token bool;
     Token id;
     JBCNode expr;
+    JBCNode factor;
 } {
     number = <INTEGER> {
         jjtThis.setJbcNode(new JBCInteger(number.image));
@@ -181,11 +183,20 @@ JBCNode Factor(): {
         jjtThis.setJbcNode(expr);
         return expr;
     }
+    | bool = <TRUE> {
+        jjtThis.setJbcNode(new JBCTrue());
+        return jjtThis.getJbcNode();
+    }
+    | bool = <FALSE> {
+        jjtThis.setJbcNode(new JBCFalse());
+        return jjtThis.getJbcNode();
+    }
+    | <NOT> factor = Factor() {
+        jjtThis.setJbcNode(new JBCNot((JBCExpr) factor));
+        return jjtThis.getJbcNode();
+    }
     | id = <ID> {
         jjtThis.setJbcNode(new JBCId(id.image));
         return jjtThis.getJbcNode();
     }
-    | <TRUE> { return null; }
-    | <FALSE> { return null; }
-    | <NOT> Factor() { return null; }
 }
