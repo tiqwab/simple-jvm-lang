@@ -70,11 +70,11 @@ TOKEN: {
 
 // --- Translation Scheme ---
 
+// S -> S'+
+// S' -> <TYPE> <ID> "=" E | E
 // E -> T ("+" T | "-" T)*
 // T -> F ("*" T | "/" F)*
-// F -> N | R | "(" E ")" | id
-// N -> <int>
-// R -> <float>
+// F -> <INTEGER> | <FLOAT> | "(" E ")" | <ID>
 
 SimpleNode Start(): {
     JBCNode stmts;
