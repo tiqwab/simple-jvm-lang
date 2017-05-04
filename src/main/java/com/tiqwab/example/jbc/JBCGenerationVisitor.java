@@ -140,6 +140,11 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
     }
 
     @Override
+    public void visit(JBCIf node) {
+
+    }
+
+    @Override
     public void visit(JBCEval node) {
         node.genCode(mv, env);
     }
@@ -162,17 +167,14 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
 
     @Override
     public void visit(JBCTrue node) {
-
     }
 
     @Override
     public void visit(JBCFalse node) {
-
     }
 
     @Override
     public void visit(JBCNot node) {
-
     }
 
 }

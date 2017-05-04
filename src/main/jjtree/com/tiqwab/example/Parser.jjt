@@ -119,6 +119,7 @@ JBCNode Statement(): {
     Token id;
     Token type;
     JBCNode expression;
+    JBCNode statement;
 } {
     (
         expression = Expression() <NEWLINE> {
@@ -129,7 +130,9 @@ JBCNode Statement(): {
             jjtThis.setJbcNode(new JBCAssign(id.image, type.image, (JBCExpr) expression));
         }
         |
-        <IF> <LPAREN> Expression() <RPAREN>
+        <IF> <LPAREN> expression = Expression() <RPAREN> statement = Statement() {
+            jjtThis.setJbcNode(new JBCIf((JBCExpr) expression, (JBCStmt) statement));
+        }
     ) {
         return jjtThis.getJbcNode();
     }
