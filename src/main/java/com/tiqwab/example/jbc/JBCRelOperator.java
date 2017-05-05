@@ -2,9 +2,7 @@ package com.tiqwab.example.jbc;
 
 import com.tiqwab.example.Environment;
 import com.tiqwab.example.symbol.Type;
-import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
 
 public class JBCRelOperator extends JBCExprBase {
 
@@ -26,6 +24,8 @@ public class JBCRelOperator extends JBCExprBase {
 
     @Override
     public void accept(JBCNodeVisitor visitor) {
+        this.lhs.accept(visitor);
+        this.rhs.accept(visitor);
         visitor.visit(this);
     }
 
@@ -39,13 +39,6 @@ public class JBCRelOperator extends JBCExprBase {
         this.rhs.setWidenedType(actualType);
         this.rhs.genCode(mv, env);
 
-        Label labelTrue = new Label();
-        Label labelFalse = new Label();
-        mv.visitJumpInsn(Opcodes.IF_ICMPLT, labelTrue);
-        mv.visitInsn(Opcodes.ICONST_0);
-        mv.visitJumpInsn(Opcodes.GOTO, labelFalse);
-        mv.visitLabel(labelTrue);
-        mv.visitInsn(Opcodes.ICONST_1);
-        mv.visitLabel(labelFalse);
+        actualType.genLTCode(mv);
     }
 }

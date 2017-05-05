@@ -1,8 +1,10 @@
 package com.tiqwab.example.symbol;
 
+import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -92,4 +94,23 @@ public enum Type {
         return this.divCode;
     }
 
+    public void genLTCode(MethodVisitor mv) {
+        Label labelTrue = new Label();
+        Label labelFalse = new Label();
+
+        // FIXME: separate logic to each class
+        if (this == Type.Int) {
+            mv.visitJumpInsn(Opcodes.IF_ICMPLT, labelTrue);
+        } else if (this == Type.Float) {
+            mv.visitInsn(Opcodes.FCMPG);
+            mv.visitJumpInsn(Opcodes.IFLT, labelTrue);
+        } else {
+            throw new IllegalStateException("Cannot compare with " + this);
+        }
+        mv.visitInsn(Opcodes.ICONST_0);
+        mv.visitJumpInsn(Opcodes.GOTO, labelFalse);
+        mv.visitLabel(labelTrue);
+        mv.visitInsn(Opcodes.ICONST_1);
+        mv.visitLabel(labelFalse);
+    }
 }
