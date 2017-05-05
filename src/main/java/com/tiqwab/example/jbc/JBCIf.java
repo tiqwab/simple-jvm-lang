@@ -25,6 +25,9 @@ public class JBCIf extends JBCNodeBase implements JBCStmt {
 
     @Override
     public void accept(JBCNodeVisitor visitor) {
+        this.expr.accept(visitor);
+        this.stmtTrue.accept(visitor);
+        this.stmtFalse.accept(visitor);
         visitor.visit(this);
     }
 

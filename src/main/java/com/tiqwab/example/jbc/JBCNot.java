@@ -22,6 +22,7 @@ public class JBCNot extends JBCExprBase {
 
     @Override
     public void accept(JBCNodeVisitor visitor) {
+        this.expr.accept(visitor);
         visitor.visit(this);
     }
 
