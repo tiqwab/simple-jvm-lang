@@ -149,7 +149,7 @@ JBCNode Rel(): {
     expression1 = Expression() { jjtThis.setJbcNode(expression1); }
     (
         <LT> expression2 = Expression() {
-
+            jjtThis.setJbcNode(new JBCRelOperator("<", (JBCExpr) expression1, (JBCExpr) expression2));
         }
     )? {
         return jjtThis.getJbcNode();
