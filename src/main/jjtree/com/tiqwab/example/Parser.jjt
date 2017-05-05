@@ -53,6 +53,8 @@ TOKEN: {
     < LPAREN: "(" >
     | < RPAREN: ")" >
     | < ASSIGN: "=" >
+    | < IF: "if" >
+    | < ELSE: "else" >
 }
 
 // Type modifier
@@ -82,7 +84,7 @@ TOKEN: {
 // --- Translation Scheme ---
 
 // S -> S'+
-// S' -> <TYPE> <ID> "=" E | E
+// S' -> <TYPE> <ID> "=" E | <IF> "(" expr ")" S' | E
 // E -> T ("+" T | "-" T)*
 // T -> F ("*" T | "/" F)*
 // F -> <INTEGER> | <FLOAT> | "(" E ")" | <ID> | <TRUE> | <FALSE> | "!" F
@@ -118,6 +120,8 @@ JBCNode Statement(): {
     Token id;
     Token type;
     JBCNode expression;
+    JBCNode statement1;
+    JBCNode statement2;
 } {
     (
         expression = Expression() <NEWLINE> {
@@ -126,6 +130,10 @@ JBCNode Statement(): {
         |
         type = <TYPE> id = <ID> <ASSIGN> expression = Expression() <NEWLINE> {
             jjtThis.setJbcNode(new JBCAssign(id.image, type.image, (JBCExpr) expression));
+        }
+        |
+        <IF> <LPAREN> expression = Expression() <RPAREN> statement1 = Statement() <ELSE> statement2 = Statement() {
+            jjtThis.setJbcNode(new JBCIf((JBCExpr) expression, (JBCStmt) statement1, (JBCStmt) statement2));
         }
     ) {
         return jjtThis.getJbcNode();

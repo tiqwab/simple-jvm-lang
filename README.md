@@ -2,7 +2,10 @@
 
 - boolean type
 - array type
-- if, while
+- if
+  - re-assign variable if it is the same type
+  - block scope
+- while
 - function
 - (class or struct)
 
