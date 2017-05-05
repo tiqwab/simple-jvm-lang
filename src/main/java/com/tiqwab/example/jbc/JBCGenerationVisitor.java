@@ -156,6 +156,7 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
 
     @Override
     public void visit(JBCRelOperator node) {
+        node.calcType(env);
     }
 
     @Override

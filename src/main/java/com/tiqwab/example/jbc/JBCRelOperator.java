@@ -14,7 +14,6 @@ public class JBCRelOperator extends JBCExprBase {
         this.op = op;
         this.lhs = lhs;
         this.rhs = rhs;
-        this.type = Type.Bool;
     }
 
     @Override
@@ -31,14 +30,22 @@ public class JBCRelOperator extends JBCExprBase {
 
     @Override
     public void genCode(MethodVisitor mv, Environment env) {
-        Type actualType = Type.max(lhs.getType(env), rhs.getType(env)).orElseThrow(
+        Type widenedType = Type.max(lhs.getType(), rhs.getType()).orElseThrow(
                 () -> new IllegalStateException(String.format("Cannot apply operation. lhs: %s, op: %s, rhs: %s", lhs, op, rhs))
         );
-        this.lhs.setWidenedType(actualType);
-        this.lhs.genCode(mv, env);
-        this.rhs.setWidenedType(actualType);
-        this.rhs.genCode(mv, env);
 
-        actualType.genLTCode(mv);
+        this.lhs.genCode(mv, env);
+        Type.widen(mv, this.lhs.getType(), widenedType);
+
+        this.rhs.genCode(mv, env);
+        Type.widen(mv, this.rhs.getType(), widenedType);
+
+        widenedType.genLTCode(mv);
     }
+
+    @Override
+    public void calcType(Environment env) {
+        this.type = Type.Bool;
+    }
+
 }
