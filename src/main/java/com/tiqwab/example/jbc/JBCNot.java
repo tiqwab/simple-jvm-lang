@@ -12,7 +12,6 @@ public class JBCNot extends JBCExprBase {
 
     public JBCNot(final JBCExpr expr) {
         this.expr = expr;
-        this.type = Type.Bool;
     }
 
     @Override
@@ -41,6 +40,11 @@ public class JBCNot extends JBCExprBase {
         mv.visitLabel(labelFalse);
         mv.visitInsn(Opcodes.ICONST_1);
         mv.visitLabel(labelTrue);
+    }
+
+    @Override
+    public void calcType(Environment env) {
+        this.type = Type.Bool;
     }
 
 }

@@ -11,7 +11,7 @@ import org.objectweb.asm.Opcodes;
 public class JBCTrue extends JBCExprBase {
 
     public JBCTrue() {
-        this.type = Type.Bool;
+
     }
 
     @Override
@@ -27,6 +27,11 @@ public class JBCTrue extends JBCExprBase {
     @Override
     public void genCode(MethodVisitor mv, Environment env) {
         mv.visitIntInsn(Opcodes.BIPUSH, 1);
+    }
+
+    @Override
+    public void calcType(Environment env) {
+        this.type = Type.Bool;
     }
 
 }

@@ -151,30 +151,37 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
 
     @Override
     public void visit(JBCBinaryOperator node) {
+        node.calcType(env);
     }
 
     @Override
     public void visit(JBCInteger node) {
+        node.calcType(env);
     }
 
     @Override
     public void visit(JBCFloat node) {
+        node.calcType(env);
     }
 
     @Override
     public void visit(JBCId node) {
+        node.calcType(env);
     }
 
     @Override
     public void visit(JBCTrue node) {
+        node.calcType(env);
     }
 
     @Override
     public void visit(JBCFalse node) {
+        node.calcType(env);
     }
 
     @Override
     public void visit(JBCNot node) {
+        node.calcType(env);
     }
 
 }

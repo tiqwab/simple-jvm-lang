@@ -11,7 +11,6 @@ public class JBCInteger extends JBCExprBase {
 
     public JBCInteger(final String value) {
         this.value = Integer.parseInt(value);
-        this.type = Type.Int;
     }
 
     public int getValue() {
@@ -39,6 +38,11 @@ public class JBCInteger extends JBCExprBase {
         } else {
             mv.visitLdcInsn(value);
         }
+    }
+
+    @Override
+    public void calcType(Environment env) {
+        this.type = Type.Int;
     }
 
 }

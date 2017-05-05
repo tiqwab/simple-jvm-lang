@@ -10,7 +10,6 @@ public class JBCFloat extends JBCExprBase {
 
     public JBCFloat(final String value) {
         this.value = Float.parseFloat(value);
-        this.type = Type.Float;
     }
 
     public float getValue() {
@@ -31,6 +30,11 @@ public class JBCFloat extends JBCExprBase {
     @Override
     public void genCode(MethodVisitor mv, Environment env) {
         mv.visitLdcInsn(new Float(this.getValue()));
+    }
+
+    @Override
+    public void calcType(Environment env) {
+        this.type = Type.Float;
     }
 
 }

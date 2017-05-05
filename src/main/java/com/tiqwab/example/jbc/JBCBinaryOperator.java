@@ -27,16 +27,6 @@ public class JBCBinaryOperator extends JBCExprBase {
     }
 
     @Override
-    public Type getType(Environment env) {
-        if (this.type == null) {
-            this.type = Type.max(lhs.getType(env), rhs.getType(env)).orElseThrow(
-                    () -> new IllegalStateException(String.format("Cannot apply operation. lhs: %s, op: %s, rhs: %s", lhs, op, rhs))
-            );
-        }
-        return this.type;
-    }
-
-    @Override
     public void accept(JBCNodeVisitor visitor) {
         lhs.accept(visitor);
         rhs.accept(visitor);
@@ -64,6 +54,13 @@ public class JBCBinaryOperator extends JBCExprBase {
         } else {
             throw new IllegalArgumentException("unknown op: " + this.getOp());
         }
+    }
+
+    @Override
+    public void calcType(Environment env) {
+        this.type = Type.max(lhs.getType(env), rhs.getType(env)).orElseThrow(
+                () -> new IllegalStateException(String.format("Cannot apply operation. lhs: %s, op: %s, rhs: %s", lhs, op, rhs))
+        );
     }
 
 }

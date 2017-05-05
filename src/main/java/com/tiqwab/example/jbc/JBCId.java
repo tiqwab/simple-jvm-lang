@@ -47,4 +47,12 @@ public class JBCId extends JBCExprBase {
         mv.visitVarInsn(symbol.getType().getLoadCode(), symbol.getIndex());
     }
 
+    @Override
+    public void calcType(Environment env) {
+        final Symbol symbol = env.get(this.getName()).orElseThrow(
+                () -> new IllegalStateException(String.format("Cannot resolve symbol '%s'", this.getName()))
+        );
+        this.type = symbol.getType();
+    }
+
 }
