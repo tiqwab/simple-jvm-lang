@@ -46,6 +46,7 @@ TOKEN: {
     | < SUBTRACT: "-" >
     | < MULT: "*" >
     | < DIV: "/" >
+    | < LT: "<" >
 }
 
 // Symbols
@@ -84,7 +85,8 @@ TOKEN: {
 // --- Translation Scheme ---
 
 // S -> S'+
-// S' -> <TYPE> <ID> "=" E | <IF> "(" expr ")" S' | E
+// S' -> <TYPE> <ID> "=" R | <IF> "(" R ")" S' | R
+// R -> E | E "<" E
 // E -> T ("+" T | "-" T)*
 // T -> F ("*" T | "/" F)*
 // F -> <INTEGER> | <FLOAT> | "(" E ")" | <ID> | <TRUE> | <FALSE> | "!" F
@@ -124,18 +126,32 @@ JBCNode Statement(): {
     JBCNode statement2;
 } {
     (
-        expression = Expression() <NEWLINE> {
+        expression = Rel() <NEWLINE> {
             jjtThis.setJbcNode(new JBCEval((JBCExpr) expression));
         }
         |
-        type = <TYPE> id = <ID> <ASSIGN> expression = Expression() <NEWLINE> {
+        type = <TYPE> id = <ID> <ASSIGN> expression = Rel() <NEWLINE> {
             jjtThis.setJbcNode(new JBCAssign(id.image, type.image, (JBCExpr) expression));
         }
         |
-        <IF> <LPAREN> expression = Expression() <RPAREN> statement1 = Statement() <ELSE> statement2 = Statement() {
+        <IF> <LPAREN> expression = Rel() <RPAREN> statement1 = Statement() <ELSE> statement2 = Statement() {
             jjtThis.setJbcNode(new JBCIf((JBCExpr) expression, (JBCStmt) statement1, (JBCStmt) statement2));
         }
     ) {
+        return jjtThis.getJbcNode();
+    }
+}
+
+JBCNode Rel(): {
+    JBCNode expression1;
+    JBCNode expression2;
+} {
+    expression1 = Expression() { jjtThis.setJbcNode(expression1); }
+    (
+        <LT> expression2 = Expression() {
+
+        }
+    )? {
         return jjtThis.getJbcNode();
     }
 }
