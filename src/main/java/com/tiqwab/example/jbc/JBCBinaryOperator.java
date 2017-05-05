@@ -47,8 +47,11 @@ public class JBCBinaryOperator extends JBCExprBase {
     public void genCode(MethodVisitor mv, Environment env) {
         this.lhs.setWidenedType(this.getType(env));
         this.lhs.genCode(mv, env);
+        Type.widen(mv, this.lhs.getType(env), this.getType(env));
+
         this.rhs.setWidenedType(this.getType(env));
         this.rhs.genCode(mv, env);
+        Type.widen(mv, this.rhs.getType(env), this.getType(env));
 
         Type type = this.getType(env);
         if (this.getOp().equals("+")) {

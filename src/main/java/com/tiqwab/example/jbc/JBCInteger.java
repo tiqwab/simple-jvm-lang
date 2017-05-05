@@ -39,7 +39,6 @@ public class JBCInteger extends JBCExprBase {
         } else {
             mv.visitLdcInsn(value);
         }
-        Type.widen(mv, this.getType(env), this.getWidenedType());
     }
 
 }
