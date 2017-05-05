@@ -29,8 +29,8 @@ public class JBCNot extends JBCExprBase {
     public void genCode(MethodVisitor mv, Environment env) {
         this.expr.genCode(mv, env);
 
-        if (expr.getType(env) != Type.Bool) {
-            throw new IllegalStateException("Expect boolean value but :" + expr.getType(env));
+        if (expr.getType() != Type.Bool) {
+            throw new IllegalStateException("Expect boolean value but :" + expr.getType());
         }
         Label labelTrue = new Label();
         Label labelFalse = new Label();

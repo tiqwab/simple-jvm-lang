@@ -14,7 +14,6 @@ public class JBCSeq extends JBCNodeBase implements JBCNode {
     public JBCSeq(final JBCStmt stmt) {
         this.head = stmt;
         this.tail = Optional.empty();
-        this.type = Type.Void;
     }
 
     public JBCSeq getTail() {

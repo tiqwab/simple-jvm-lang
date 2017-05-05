@@ -35,13 +35,13 @@ public class JBCBinaryOperator extends JBCExprBase {
 
     @Override
     public void genCode(MethodVisitor mv, Environment env) {
-        Type type = this.getType(env);
+        Type type = this.getType();
 
         this.lhs.genCode(mv, env);
-        Type.widen(mv, this.lhs.getType(env), this.getType(env));
+        Type.widen(mv, this.lhs.getType(), this.getType());
 
         this.rhs.genCode(mv, env);
-        Type.widen(mv, this.rhs.getType(env), this.getType(env));
+        Type.widen(mv, this.rhs.getType(), this.getType());
 
         if (this.getOp().equals("+")) {
             mv.visitInsn(type.getAddCode());
@@ -58,7 +58,7 @@ public class JBCBinaryOperator extends JBCExprBase {
 
     @Override
     public void calcType(Environment env) {
-        this.type = Type.max(lhs.getType(env), rhs.getType(env)).orElseThrow(
+        this.type = Type.max(lhs.getType(), rhs.getType()).orElseThrow(
                 () -> new IllegalStateException(String.format("Cannot apply operation. lhs: %s, op: %s, rhs: %s", lhs, op, rhs))
         );
     }

@@ -21,7 +21,6 @@ public class JBCAssign extends JBCNodeBase implements JBCStmt {
         this.name = name;
         this.expr = expr;
         this.varType = typeModifier != null ? Optional.of(Type.of(typeModifier)) : Optional.empty();
-        this.type = Type.Void;
     }
 
     @Override
@@ -41,8 +40,8 @@ public class JBCAssign extends JBCNodeBase implements JBCStmt {
 
         Type varType = this.getVarType().orElseThrow(() -> new IllegalArgumentException("Type modifier does not appear?"));
         // Check the consistence of the declared type and actual expression's type
-        if (varType != this.expr.getType(env)) {
-            throw new IllegalStateException(this.expr.getType(env) + " cannot be " + varType);
+        if (varType != this.expr.getType()) {
+            throw new IllegalStateException(this.expr.getType() + " cannot be " + varType);
         }
         // Avoid initialize variable twice
         if (env.exists(this.getName())) {

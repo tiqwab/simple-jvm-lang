@@ -19,17 +19,6 @@ public class JBCId extends JBCExprBase {
     }
 
     @Override
-    public Type getType(Environment env) {
-        if (this.type == null) {
-            final Symbol symbol = env.get(this.name).orElseThrow(
-                    () -> new IllegalStateException("Cannot resolve: " + this.name)
-            );
-            this.type = symbol.getType();
-        }
-        return this.type;
-    }
-
-    @Override
     public String toString() {
         return String.format("JBCId{name=%s}", this.name);
     }

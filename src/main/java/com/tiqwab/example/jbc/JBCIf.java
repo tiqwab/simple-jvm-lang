@@ -35,8 +35,8 @@ public class JBCIf extends JBCNodeBase implements JBCStmt {
     public void genCode(MethodVisitor mv, Environment env) {
         this.expr.genCode(mv, env);
 
-        if (this.expr.getType(env) != Type.Bool) {
-            throw new IllegalStateException("Expect boolean value but :" + expr.getType(env));
+        if (this.expr.getType() != Type.Bool) {
+            throw new IllegalStateException("Expect boolean value but :" + expr.getType());
         }
 
         Label labelTrue = new Label();
