@@ -160,6 +160,11 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
     }
 
     @Override
+    public void visit(JBCLogicalOperator node) {
+        node.calcType(env);
+    }
+
+    @Override
     public void visit(JBCInteger node) {
         node.calcType(env);
     }

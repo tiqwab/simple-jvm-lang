@@ -48,6 +48,7 @@ TOKEN: {
     | < DIV: "/" >
     | < EQ: "==" >
     | < LT: "<" >
+    | < AND: "&&" >
 }
 
 // Symbols
@@ -146,8 +147,16 @@ JBCNode Statement(): {
 
 JBCNode Logic(): {
     JBCNode rel1;
+    JBCNode rel2;
 } {
-    rel1 = Rel() { jjtThis.setJbcNode(rel1); return jjtThis.getJbcNode(); }
+    rel1 = Rel() { jjtThis.setJbcNode(rel1); }
+    (
+        <AND> rel2 = Rel() {
+            jjtThis.setJbcNode(new JBCLogicalOperator("&&", (JBCExpr) rel1, (JBCExpr) rel2));
+        }
+    )? {
+        return jjtThis.getJbcNode();
+    }
 }
 
 JBCNode Rel(): {
