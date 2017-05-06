@@ -208,7 +208,7 @@ JBCNode Factor(): {
         jjtThis.setJbcNode(new JBCFloat(number.image));
         return jjtThis.getJbcNode();
     }
-    | <LPAREN> expr = Expression() <RPAREN> {
+    | <LPAREN> expr = Rel() <RPAREN> {
         jjtThis.setJbcNode(expr);
         return expr;
     }
