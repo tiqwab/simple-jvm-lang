@@ -1,8 +1,5 @@
 ### TODO
 
-- boolean type
-  - EQ
-  - AND
 - array type
 - if
   - re-assign variable if it is the same type
