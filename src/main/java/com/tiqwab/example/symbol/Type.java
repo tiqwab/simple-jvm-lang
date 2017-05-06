@@ -113,4 +113,24 @@ public enum Type {
         mv.visitInsn(Opcodes.ICONST_1);
         mv.visitLabel(labelFalse);
     }
+
+    public void genEQCode(MethodVisitor mv) {
+        Label labelTrue = new Label();
+        Label labelFalse = new Label();
+
+        // FIXME: separate logic to each class
+        if (this == Type.Int) {
+            mv.visitJumpInsn(Opcodes.IF_ICMPEQ, labelTrue);
+        } else if (this == Type.Float) {
+            mv.visitInsn(Opcodes.FCMPG);
+            mv.visitJumpInsn(Opcodes.IFEQ, labelTrue);
+        } else {
+            throw new IllegalStateException("Cannot compare with " + this);
+        }
+        mv.visitInsn(Opcodes.ICONST_0);
+        mv.visitJumpInsn(Opcodes.GOTO, labelFalse);
+        mv.visitLabel(labelTrue);
+        mv.visitInsn(Opcodes.ICONST_1);
+        mv.visitLabel(labelFalse);
+    }
 }

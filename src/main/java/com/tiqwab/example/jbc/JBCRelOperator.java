@@ -40,7 +40,14 @@ public class JBCRelOperator extends JBCExprBase {
         this.rhs.genCode(mv, env);
         Type.widen(mv, this.rhs.getType(), widenedType);
 
-        widenedType.genLTCode(mv);
+        // FIXME
+        if (this.op.equals("==")) {
+            widenedType.genEQCode(mv);
+        } else if (this.op.equals("<")) {
+            widenedType.genLTCode(mv);
+        } else {
+            throw new IllegalStateException("Illegal op: " + this.op);
+        }
     }
 
     @Override
