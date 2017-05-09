@@ -123,18 +123,19 @@ JBCNode Statements(): {
 
 JBCNode Statement(): {
     Token id;
-    Token type;
+    Token type = null;
     JBCNode logic;
     JBCNode statement1;
     JBCNode statement2;
 } {
     (
-        logic = Logic() <NEWLINE> {
-            jjtThis.setJbcNode(new JBCEval((JBCExpr) logic));
+        LOOKAHEAD(2)
+        (type = <TYPE>)? id = <ID> <ASSIGN> logic = Logic() <NEWLINE> {
+            jjtThis.setJbcNode(new JBCAssign(id.image, (type != null ? type.image : null), (JBCExpr) logic));
         }
         |
-        type = <TYPE> id = <ID> <ASSIGN> logic = Logic() <NEWLINE> {
-            jjtThis.setJbcNode(new JBCAssign(id.image, type.image, (JBCExpr) logic));
+        logic = Logic() <NEWLINE> {
+            jjtThis.setJbcNode(new JBCEval((JBCExpr) logic));
         }
         |
         <IF> <LPAREN> logic = Logic() <RPAREN> statement1 = Statement() <ELSE> statement2 = Statement() {
