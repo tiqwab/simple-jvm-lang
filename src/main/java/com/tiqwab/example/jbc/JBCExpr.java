@@ -14,6 +14,4 @@ public interface JBCExpr extends JBCNode {
      */
     public Type calcType(Environment env);
 
-    public Type getType();
-
 }

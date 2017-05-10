@@ -149,7 +149,7 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
 
         // Check the consistence of the declared type and actual expression's type
         if (varType != expr.calcType(env)) {
-            throw new IllegalStateException(expr.getType() + " cannot be " + varType);
+            throw new IllegalStateException(expr.calcType(env) + " cannot be " + varType);
         }
         // Avoid initialize variable twice
         if (node.getVarType().isPresent() && env.exists(node.getName())) {
@@ -164,7 +164,7 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
     public void visit(JBCIf node) {
         JBCExpr expr = node.getExpr();
         if (expr.calcType(env) != Type.Bool) {
-            throw new IllegalStateException("Expect boolean value but :" + expr.getType());
+            throw new IllegalStateException("Expect boolean value but :" + expr.calcType(env));
         }
         expr.accept(this);
 
@@ -190,10 +190,10 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
         Type type = node.calcType(env);
 
         lhs.accept(this);
-        Type.widen(mv, lhs.getType(), type);
+        Type.widen(mv, lhs.calcType(env), type);
 
         rhs.accept(this);
-        Type.widen(mv, rhs.getType(), type);
+        Type.widen(mv, rhs.calcType(env), type);
 
         if (node.getOp().equals("+")) {
             mv.visitInsn(type.getAddCode());
