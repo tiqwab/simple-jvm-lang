@@ -20,6 +20,12 @@ public class JBCBinaryOperator extends JBCExprBase {
     public String getOp() {
         return this.op;
     }
+    public JBCExpr getLhs() {
+        return this.lhs;
+    }
+    public JBCExpr getRhs() {
+        return this.rhs;
+    }
 
     @Override
     public String toString() {
@@ -28,8 +34,6 @@ public class JBCBinaryOperator extends JBCExprBase {
 
     @Override
     public void accept(JBCNodeVisitor visitor) {
-        lhs.accept(visitor);
-        rhs.accept(visitor);
         visitor.visit(this);
     }
 

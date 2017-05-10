@@ -152,7 +152,30 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
 
     @Override
     public void visit(JBCBinaryOperator node) {
+        JBCExpr lhs = node.getLhs();
+        JBCExpr rhs = node.getRhs();
+
+        lhs.calcType(env);
+        rhs.calcType(env);
         node.calcType(env);
+
+        Type type = node.getType();
+        lhs.accept(this);
+        Type.widen(mv, lhs.getType(), type);
+        rhs.accept(this);
+        Type.widen(mv, rhs.getType(), type);
+
+        if (node.getOp().equals("+")) {
+            mv.visitInsn(type.getAddCode());
+        } else if (node.getOp().equals("-")) {
+            mv.visitInsn(type.getSubCode());
+        } else if (node.getOp().equals("*")) {
+            mv.visitInsn(type.getMulCode());
+        } else if (node.getOp().equals("/")) {
+            mv.visitInsn(type.getDivCode());
+        } else {
+            throw new IllegalArgumentException("unknown op: " + node.getOp());
+        }
     }
 
     @Override
@@ -167,6 +190,8 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
 
     @Override
     public void visit(JBCInteger node) {
+        node.calcType(env);
+
         final int value = node.getValue();
         // The generated code is determined by the necessary size (byte) of integer.
         if (-128 <= value && value < 128) {
@@ -180,6 +205,7 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
 
     @Override
     public void visit(JBCFloat node) {
+        node.calcType(env);
         mv.visitLdcInsn(new Float(node.getValue()));
     }
 
@@ -190,11 +216,13 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
 
     @Override
     public void visit(JBCTrue node) {
+        node.calcType(env);
         mv.visitIntInsn(Opcodes.BIPUSH, 1);
     }
 
     @Override
     public void visit(JBCFalse node) {
+        node.calcType(env);
         mv.visitIntInsn(Opcodes.BIPUSH, 0);
     }
 
