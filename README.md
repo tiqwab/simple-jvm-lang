@@ -16,6 +16,17 @@ else 0
 x
 ```
 
+```
+int x = 5
+if (true) {
+    int y = 6
+    x = x + y
+} else {
+    int y = 7
+    x = x + y
+}
+```
+
 ### NOT TODO
 
 - error handling
