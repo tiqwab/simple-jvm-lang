@@ -180,7 +180,7 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
 
     @Override
     public void visit(JBCFloat node) {
-        node.calcType(env);
+        mv.visitLdcInsn(new Float(node.getValue()));
     }
 
     @Override
@@ -190,12 +190,12 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
 
     @Override
     public void visit(JBCTrue node) {
-        node.calcType(env);
+        mv.visitIntInsn(Opcodes.BIPUSH, 1);
     }
 
     @Override
     public void visit(JBCFalse node) {
-        node.calcType(env);
+        mv.visitIntInsn(Opcodes.BIPUSH, 0);
     }
 
     @Override

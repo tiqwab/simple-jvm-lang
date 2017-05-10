@@ -26,7 +26,6 @@ public class JBCFloat extends JBCExprBase {
         visitor.visit(this);
     }
 
-    // TODO: Check how to apply float type
     @Override
     public void genCode(MethodVisitor mv, Environment env) {
         mv.visitLdcInsn(new Float(this.getValue()));
