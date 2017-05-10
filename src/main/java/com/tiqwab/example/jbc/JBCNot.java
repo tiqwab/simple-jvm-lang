@@ -14,6 +14,10 @@ public class JBCNot extends JBCExprBase {
         this.expr = expr;
     }
 
+    public JBCExpr getExpr() {
+        return this.expr;
+    }
+
     @Override
     public String toString() {
         return String.format("JBCNot{expr=%s}", this.expr);
@@ -21,7 +25,6 @@ public class JBCNot extends JBCExprBase {
 
     @Override
     public void accept(JBCNodeVisitor visitor) {
-        this.expr.accept(visitor);
         visitor.visit(this);
     }
 
