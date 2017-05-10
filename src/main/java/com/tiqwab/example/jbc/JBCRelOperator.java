@@ -16,6 +16,18 @@ public class JBCRelOperator extends JBCExprBase {
         this.rhs = rhs;
     }
 
+    public String getOp() {
+        return this.op;
+    }
+
+    public JBCExpr getLhs() {
+        return this.lhs;
+    }
+
+    public JBCExpr getRhs() {
+        return this.rhs;
+    }
+
     @Override
     public String toString() {
         return String.format("JBCRelOperator{op=%s, lhs=%s, rhs=%s", this.op, this.lhs, this.rhs);
@@ -23,8 +35,6 @@ public class JBCRelOperator extends JBCExprBase {
 
     @Override
     public void accept(JBCNodeVisitor visitor) {
-        this.lhs.accept(visitor);
-        this.rhs.accept(visitor);
         visitor.visit(this);
     }
 

@@ -210,7 +210,27 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
 
     @Override
     public void visit(JBCRelOperator node) {
-        node.calcType(env);
+        JBCExpr lhs = node.getLhs();
+        JBCExpr rhs = node.getRhs();
+
+        Type widenedType = Type.max(lhs.calcType(env), rhs.calcType(env)).orElseThrow(
+                () -> new IllegalStateException(String.format("Cannot apply operation. lhs: %s, op: %s, rhs: %s", lhs, node.getOp(), rhs))
+        );
+
+        lhs.accept(this);
+        Type.widen(mv, lhs.calcType(env), widenedType);
+
+        rhs.accept(this);
+        Type.widen(mv, rhs.calcType(env), widenedType);
+
+        // FIXME
+        if (node.getOp().equals("==")) {
+            widenedType.genEQCode(mv);
+        } else if (node.getOp().equals("<")) {
+            widenedType.genLTCode(mv);
+        } else {
+            throw new IllegalStateException("Illegal op: " + node.getOp());
+        }
     }
 
     @Override
