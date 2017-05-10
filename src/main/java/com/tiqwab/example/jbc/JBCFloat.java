@@ -32,8 +32,11 @@ public class JBCFloat extends JBCExprBase {
     }
 
     @Override
-    public void calcType(Environment env) {
-        this.type = Type.Float;
+    public Type calcType(Environment env) {
+        if (this.type == null) {
+            this.type = Type.Float;
+        }
+        return this.type;
     }
 
 }

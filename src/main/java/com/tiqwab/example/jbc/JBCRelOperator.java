@@ -51,8 +51,11 @@ public class JBCRelOperator extends JBCExprBase {
     }
 
     @Override
-    public void calcType(Environment env) {
-        this.type = Type.Bool;
+    public Type calcType(Environment env) {
+        if (this.type == null) {
+            this.type = Type.Bool;
+        }
+        return this.type;
     }
 
 }

@@ -61,10 +61,13 @@ public class JBCBinaryOperator extends JBCExprBase {
     }
 
     @Override
-    public void calcType(Environment env) {
-        this.type = Type.max(lhs.getType(), rhs.getType()).orElseThrow(
-                () -> new IllegalStateException(String.format("Cannot apply operation. lhs: %s, op: %s, rhs: %s", lhs, op, rhs))
-        );
+    public Type calcType(Environment env) {
+        if (this.type == null) {
+            this.type = Type.max(lhs.calcType(env), rhs.calcType(env)).orElseThrow(
+                    () -> new IllegalStateException(String.format("Cannot apply operation. lhs: %s, op: %s, rhs: %s", lhs, op, rhs))
+            );
+        }
+        return this.type;
     }
 
 }

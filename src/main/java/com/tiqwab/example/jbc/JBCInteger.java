@@ -41,8 +41,11 @@ public class JBCInteger extends JBCExprBase {
     }
 
     @Override
-    public void calcType(Environment env) {
-        this.type = Type.Int;
+    public Type calcType(Environment env) {
+        if (this.type == null) {
+            this.type = Type.Int;
+        }
+        return this.type;
     }
 
 }

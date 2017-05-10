@@ -12,7 +12,7 @@ public interface JBCExpr extends JBCNode {
      * The current implementation does not use it in the parsing, so have to calculate type before the generation of byte codes.
      * @param env
      */
-    public void calcType(Environment env);
+    public Type calcType(Environment env);
 
     public Type getType();
 

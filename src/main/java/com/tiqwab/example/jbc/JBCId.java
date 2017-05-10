@@ -37,11 +37,14 @@ public class JBCId extends JBCExprBase {
     }
 
     @Override
-    public void calcType(Environment env) {
-        final Symbol symbol = env.get(this.getName()).orElseThrow(
-                () -> new IllegalStateException(String.format("Cannot resolve symbol '%s'", this.getName()))
-        );
-        this.type = symbol.getType();
+    public Type calcType(Environment env) {
+        if (this.type == null) {
+            final Symbol symbol = env.get(this.getName()).orElseThrow(
+                    () -> new IllegalStateException(String.format("Cannot resolve symbol '%s'", this.getName()))
+            );
+            this.type = symbol.getType();
+        }
+        return this.type;
     }
 
 }

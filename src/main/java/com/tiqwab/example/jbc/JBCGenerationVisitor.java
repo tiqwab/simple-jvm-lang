@@ -154,14 +154,11 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
     public void visit(JBCBinaryOperator node) {
         JBCExpr lhs = node.getLhs();
         JBCExpr rhs = node.getRhs();
+        Type type = node.calcType(env);
 
-        lhs.calcType(env);
-        rhs.calcType(env);
-        node.calcType(env);
-
-        Type type = node.getType();
         lhs.accept(this);
         Type.widen(mv, lhs.getType(), type);
+
         rhs.accept(this);
         Type.widen(mv, rhs.getType(), type);
 
