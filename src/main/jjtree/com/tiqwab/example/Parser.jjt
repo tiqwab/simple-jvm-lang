@@ -143,7 +143,7 @@ JBCNode Statement(): {
                 jjtThis.setJbcNode(new JBCIf((JBCExpr) logic, (JBCStmt) statement1, (JBCStmt) statement2));
             })
             |
-            ( <LBRACE> statement1 = Statement() <RBRACE> <ELSE> <LBRACE> statement2 = Statement() <RBRACE> {
+            ( <LBRACE> statement1 = Statements() <RBRACE> <ELSE> <LBRACE> statement2 = Statements() <RBRACE> {
                 jjtThis.setJbcNode(new JBCIf((JBCExpr) logic, (JBCStmt) statement1, (JBCStmt) statement2));
             })
         )

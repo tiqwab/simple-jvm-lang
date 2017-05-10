@@ -2,7 +2,7 @@ package com.tiqwab.example.jbc;
 
 import java.util.Optional;
 
-public class JBCSeq extends JBCNodeBase implements JBCNode {
+public class JBCSeq extends JBCNodeBase implements JBCStmt {
 
     private JBCStmt head;
     private Optional<JBCSeq> tail;
