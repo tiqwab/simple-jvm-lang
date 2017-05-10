@@ -18,6 +18,18 @@ public class JBCIf extends JBCNodeBase implements JBCStmt {
         this.stmtFalse = stmtFalse;
     }
 
+    public JBCExpr getExpr() {
+        return this.expr;
+    }
+
+    public JBCStmt getStmtTrue() {
+        return this.stmtTrue;
+    }
+
+    public JBCStmt getStmtFalse() {
+        return this.stmtFalse;
+    }
+
     @Override
     public String toString() {
         return String.format("JBCIf{expr=%s, stmtTrue=%s, stmtFalse=%s}", this.expr, this.stmtTrue, this.stmtFalse);
@@ -25,9 +37,6 @@ public class JBCIf extends JBCNodeBase implements JBCStmt {
 
     @Override
     public void accept(JBCNodeVisitor visitor) {
-        this.expr.accept(visitor);
-        // this.stmtTrue.accept(visitor);
-        // this.stmtFalse.accept(visitor);
         visitor.visit(this);
     }
 

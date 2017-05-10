@@ -5,6 +5,7 @@ import com.tiqwab.example.GeneratedCode;
 import com.tiqwab.example.Symbol;
 import com.tiqwab.example.symbol.Type;
 import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -161,7 +162,20 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
 
     @Override
     public void visit(JBCIf node) {
-        node.genCode(mv, env);
+        JBCExpr expr = node.getExpr();
+        if (expr.calcType(env) != Type.Bool) {
+            throw new IllegalStateException("Expect boolean value but :" + expr.getType());
+        }
+        expr.accept(this);
+
+        Label labelTrue = new Label();
+        Label labelFalse = new Label();
+        mv.visitJumpInsn(Opcodes.IFEQ, labelFalse);
+        node.getStmtTrue().accept(this);
+        mv.visitJumpInsn(Opcodes.GOTO, labelTrue);
+        mv.visitLabel(labelFalse);
+        node.getStmtFalse().accept(this);
+        mv.visitLabel(labelTrue);
     }
 
     @Override
