@@ -29,10 +29,7 @@ SKIP: {
     | "\t"
     | "\r"
     | "\f"
-}
-
-TOKEN: {
-    < NEWLINE: "\n" >
+    | "\n"
 }
 
 // Unary operator
@@ -99,8 +96,7 @@ TOKEN: {
 SimpleNode Start(): {
     JBCNode stmts;
 } {
-    // TODO: <EOF> not <NEWLINE>
-    stmts = Statements() <NEWLINE> {
+    stmts = Statements() <EOF> {
         jjtThis.setJbcNode(stmts);
         return jjtThis;
     }
@@ -133,11 +129,11 @@ JBCNode Statement(): {
 } {
     (
         LOOKAHEAD(2)
-        (type = <TYPE>)? id = <ID> <ASSIGN> logic = Logic() <NEWLINE> {
+        (type = <TYPE>)? id = <ID> <ASSIGN> logic = Logic() {
             jjtThis.setJbcNode(new JBCAssign(id.image, (type != null ? type.image : null), (JBCExpr) logic));
         }
         |
-        logic = Logic() <NEWLINE> {
+        logic = Logic() {
             jjtThis.setJbcNode(new JBCEval((JBCExpr) logic));
         }
         |

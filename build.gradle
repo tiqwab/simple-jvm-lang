@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'application'
     id 'ca.coglinc.javacc' version '2.4.0'
 }
 
@@ -7,6 +8,8 @@ group 'com.tiqwab'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
+
+mainClassName = 'com.tiqwab.example.ParserMain'
 
 repositories {
     mavenCentral()
@@ -40,4 +43,8 @@ sourceSets {
             srcDir compileJavacc.outputDirectory
         }
     }
+}
+
+run {
+    standardInput = System.in
 }
