@@ -23,6 +23,10 @@ public class JBCAssign extends JBCNodeBase implements JBCStmt {
         this.varType = typeModifier != null ? Optional.of(Type.of(typeModifier)) : Optional.empty();
     }
 
+    public JBCExpr getExpr() {
+        return this.expr;
+    }
+
     @Override
     public String toString() {
         return String.format("JBCAssign{name=%s, varType=%s, expr=%s}", this.name, this.varType, this.expr);
@@ -30,7 +34,6 @@ public class JBCAssign extends JBCNodeBase implements JBCStmt {
 
     @Override
     public void accept(JBCNodeVisitor visitor) {
-        this.expr.accept(visitor);
         visitor.visit(this);
     }
 

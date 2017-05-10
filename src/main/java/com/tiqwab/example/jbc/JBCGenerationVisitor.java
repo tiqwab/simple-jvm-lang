@@ -137,7 +137,26 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
 
     @Override
     public void visit(JBCAssign node) {
-        node.genCode(mv, env);
+        JBCExpr expr = node.getExpr();
+        expr.accept(this);
+
+        Type varType = node.getVarType().orElseGet(() -> {
+            return env.get(node.getName())
+                    .orElseThrow(() -> new IllegalArgumentException("Type modifier does not appear?"))
+                    .getType();
+        });
+
+        // Check the consistence of the declared type and actual expression's type
+        if (varType != expr.calcType(env)) {
+            throw new IllegalStateException(expr.getType() + " cannot be " + varType);
+        }
+        // Avoid initialize variable twice
+        if (node.getVarType().isPresent() && env.exists(node.getName())) {
+            throw new IllegalStateException("Variable '" + node.getName() + "' is already declared");
+        }
+
+        final Symbol symbol = env.getOrNew(node.getName(), varType);
+        mv.visitVarInsn(varType.getStoreCode(), symbol.getIndex());
     }
 
     @Override
@@ -209,6 +228,10 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
     @Override
     public void visit(JBCId node) {
         node.calcType(env);
+        final Symbol symbol = env.get(node.getName()).orElseThrow(
+                () -> new IllegalStateException(String.format("Cannot resolve symbol '%s'", node.getName()))
+        );
+        mv.visitVarInsn(symbol.getType().getLoadCode(), symbol.getIndex());
     }
 
     @Override
