@@ -18,6 +18,14 @@ public class JBCLogicalOperator extends JBCExprBase {
         this.rhs= rhs;
     }
 
+    public JBCExpr getLhs() {
+        return this.lhs;
+    }
+
+    public JBCExpr getRhs() {
+        return this.rhs;
+    }
+
     @Override
     public String toString() {
         return String.format("JBCLogicalOperator{op=%s, lhs=%s, rhs=%s}", this.op, this.lhs, this.rhs);
@@ -25,8 +33,6 @@ public class JBCLogicalOperator extends JBCExprBase {
 
     @Override
     public void accept(JBCNodeVisitor visitor) {
-        this.lhs.accept(visitor);
-        this.rhs.accept(visitor);
         visitor.visit(this);
     }
 
