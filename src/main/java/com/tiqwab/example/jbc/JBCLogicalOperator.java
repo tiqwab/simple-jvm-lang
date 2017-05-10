@@ -2,9 +2,6 @@ package com.tiqwab.example.jbc;
 
 import com.tiqwab.example.Environment;
 import com.tiqwab.example.symbol.Type;
-import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
 
 public class JBCLogicalOperator extends JBCExprBase {
 
@@ -34,30 +31,6 @@ public class JBCLogicalOperator extends JBCExprBase {
     @Override
     public void accept(JBCNodeVisitor visitor) {
         visitor.visit(this);
-    }
-
-    @Override
-    public void genCode(MethodVisitor mv, Environment env) {
-        Label labelTrue = new Label();
-        Label labelFalse = new Label();
-
-        if (this.lhs.getType() != Type.Bool) {
-            throw new IllegalStateException("Expect bool, but: " + this.lhs.getType());
-        }
-        this.lhs.genCode(mv, env);
-        mv.visitJumpInsn(Opcodes.IFEQ, labelFalse);
-
-        if (this.rhs.getType() != Type.Bool) {
-            throw new IllegalStateException("Expect bool, but: " + this.rhs.getType());
-        }
-        this.rhs.genCode(mv, env);
-        mv.visitJumpInsn(Opcodes.IFEQ, labelFalse);
-
-        mv.visitInsn(Opcodes.ICONST_1);
-        mv.visitJumpInsn(Opcodes.GOTO, labelTrue);
-        mv.visitLabel(labelFalse);
-        mv.visitInsn(Opcodes.ICONST_0);
-        mv.visitLabel(labelTrue);
     }
 
     @Override

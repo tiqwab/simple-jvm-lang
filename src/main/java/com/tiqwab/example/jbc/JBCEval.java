@@ -1,8 +1,5 @@
 package com.tiqwab.example.jbc;
 
-import com.tiqwab.example.Environment;
-import org.objectweb.asm.MethodVisitor;
-
 public class JBCEval extends JBCNodeBase implements JBCStmt {
 
     private final JBCExpr expr;
@@ -23,11 +20,6 @@ public class JBCEval extends JBCNodeBase implements JBCStmt {
     @Override
     public void accept(JBCNodeVisitor visitor) {
         visitor.visit(this);
-    }
-
-    @Override
-    public void genCode(MethodVisitor mv, Environment env) {
-        this.expr.genCode(mv, env);
     }
 
 }

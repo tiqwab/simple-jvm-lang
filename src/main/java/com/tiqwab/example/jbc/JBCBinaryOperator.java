@@ -1,9 +1,7 @@
 package com.tiqwab.example.jbc;
 
 import com.tiqwab.example.Environment;
-import com.tiqwab.example.Symbol;
 import com.tiqwab.example.symbol.Type;
-import org.objectweb.asm.MethodVisitor;
 
 public class JBCBinaryOperator extends JBCExprBase {
 
@@ -35,29 +33,6 @@ public class JBCBinaryOperator extends JBCExprBase {
     @Override
     public void accept(JBCNodeVisitor visitor) {
         visitor.visit(this);
-    }
-
-    @Override
-    public void genCode(MethodVisitor mv, Environment env) {
-        Type type = this.getType();
-
-        this.lhs.genCode(mv, env);
-        Type.widen(mv, this.lhs.getType(), this.getType());
-
-        this.rhs.genCode(mv, env);
-        Type.widen(mv, this.rhs.getType(), this.getType());
-
-        if (this.getOp().equals("+")) {
-            mv.visitInsn(type.getAddCode());
-        } else if (this.getOp().equals("-")) {
-            mv.visitInsn(type.getSubCode());
-        } else if (this.getOp().equals("*")) {
-            mv.visitInsn(type.getMulCode());
-        } else if (this.getOp().equals("/")) {
-            mv.visitInsn(type.getDivCode());
-        } else {
-            throw new IllegalArgumentException("unknown op: " + this.getOp());
-        }
     }
 
     @Override

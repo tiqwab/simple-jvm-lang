@@ -1,9 +1,6 @@
 package com.tiqwab.example.jbc;
 
-import com.tiqwab.example.Environment;
-import com.tiqwab.example.Symbol;
 import com.tiqwab.example.symbol.Type;
-import org.objectweb.asm.MethodVisitor;
 
 import java.util.Optional;
 
@@ -35,29 +32,6 @@ public class JBCAssign extends JBCNodeBase implements JBCStmt {
     @Override
     public void accept(JBCNodeVisitor visitor) {
         visitor.visit(this);
-    }
-
-    @Override
-    public void genCode(MethodVisitor mv, Environment env) {
-        this.expr.genCode(mv, env);
-
-        Type varType = this.getVarType().orElseGet(() -> {
-            return env.get(this.getName())
-                    .orElseThrow(() -> new IllegalArgumentException("Type modifier does not appear?"))
-                    .getType();
-        });
-
-        // Check the consistence of the declared type and actual expression's type
-        if (varType != this.expr.getType()) {
-            throw new IllegalStateException(this.expr.getType() + " cannot be " + varType);
-        }
-        // Avoid initialize variable twice
-        if (this.varType.isPresent() && env.exists(this.getName())) {
-            throw new IllegalStateException("Variable '" + this.getName() + "' is already declared");
-        }
-
-        final Symbol symbol = env.getOrNew(this.getName(), varType);
-        mv.visitVarInsn(varType.getStoreCode(), symbol.getIndex());
     }
 
     public String getName() {

@@ -2,7 +2,6 @@ package com.tiqwab.example.jbc;
 
 import com.tiqwab.example.Environment;
 import com.tiqwab.example.symbol.Type;
-import org.objectweb.asm.MethodVisitor;
 
 public class JBCFloat extends JBCExprBase {
 
@@ -24,11 +23,6 @@ public class JBCFloat extends JBCExprBase {
     @Override
     public void accept(JBCNodeVisitor visitor) {
         visitor.visit(this);
-    }
-
-    @Override
-    public void genCode(MethodVisitor mv, Environment env) {
-        mv.visitLdcInsn(new Float(this.getValue()));
     }
 
     @Override
