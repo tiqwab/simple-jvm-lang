@@ -113,8 +113,9 @@ JBCNode Statements(): {
         jjtThis.setJbcNode(seq);
     } (
         stmt = Statement() {
-            seq.setTail(new JBCSeq((JBCStmt) stmt));
-            seq = seq.getTail();
+            JBCSeq tmp = new JBCSeq((JBCStmt) stmt);
+            seq.setTail(tmp);
+            seq = tmp;
         }
     )* {
         return jjtThis.getJbcNode();

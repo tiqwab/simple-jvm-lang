@@ -131,7 +131,8 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
 
     @Override
     public void visit(JBCSeq node) {
-
+        node.getHead().accept(this);
+        node.getTail().ifPresent(seq -> seq.accept(this));
     }
 
     @Override
@@ -146,7 +147,7 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
 
     @Override
     public void visit(JBCEval node) {
-        node.genCode(mv, env);
+        node.getExpr().accept(this);
     }
 
     @Override
@@ -166,7 +167,15 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
 
     @Override
     public void visit(JBCInteger node) {
-        node.calcType(env);
+        final int value = node.getValue();
+        // The generated code is determined by the necessary size (byte) of integer.
+        if (-128 <= value && value < 128) {
+            mv.visitIntInsn(Opcodes.BIPUSH, value);
+        } else if (-32768 <= value && value < 32768){
+            mv.visitIntInsn(Opcodes.SIPUSH, value);
+        } else {
+            mv.visitLdcInsn(value);
+        }
     }
 
     @Override

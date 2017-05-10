@@ -16,8 +16,11 @@ public class JBCSeq extends JBCNodeBase implements JBCNode {
         this.tail = Optional.empty();
     }
 
-    public JBCSeq getTail() {
-        return this.tail.orElseThrow(() -> new IllegalStateException("Tail is null"));
+    public JBCStmt getHead() {
+        return this.head;
+    }
+    public Optional<JBCSeq> getTail() {
+        return this.tail;
     }
 
     public void setTail(JBCSeq seq) {
@@ -34,8 +37,6 @@ public class JBCSeq extends JBCNodeBase implements JBCNode {
 
     @Override
     public void accept(JBCNodeVisitor visitor) {
-        this.head.accept(visitor);
-        this.tail.ifPresent(seq -> seq.accept(visitor));
         visitor.visit(this);
     }
 

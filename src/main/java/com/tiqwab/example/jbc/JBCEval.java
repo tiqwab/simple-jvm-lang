@@ -11,6 +11,10 @@ public class JBCEval extends JBCNodeBase implements JBCStmt {
         this.expr = expr;
     }
 
+    public JBCExpr getExpr() {
+        return this.expr;
+    }
+
     @Override
     public String toString() {
         return String.format("JBCEval{expr=%s}", this.expr.toString());
@@ -18,7 +22,6 @@ public class JBCEval extends JBCNodeBase implements JBCStmt {
 
     @Override
     public void accept(JBCNodeVisitor visitor) {
-        expr.accept(visitor);
         visitor.visit(this);
     }
 
