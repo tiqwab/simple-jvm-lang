@@ -55,6 +55,8 @@ TOKEN: {
 TOKEN: {
     < LPAREN: "(" >
     | < RPAREN: ")" >
+    | < LBRACE: "{" >
+    | < RBRACE: "}" >
     | < ASSIGN: "=" >
     | < IF: "if" >
     | < ELSE: "else" >
@@ -87,7 +89,7 @@ TOKEN: {
 // --- Translation Scheme ---
 
 // S -> S'+
-// S' -> <TYPE> <ID> "=" L | <IF> "(" L ")" S' | L
+// S' -> <TYPE> <ID> "=" L | <IF> "(" L ")" S' <ELSE> S' | <IF> "(" L ")" "{" S "}" <ELSE> "{" S "}" | L
 // L -> R | R "&&" R
 // R -> E | E "<" E | E "==" E
 // E -> T ("+" T | "-" T)*
@@ -139,9 +141,16 @@ JBCNode Statement(): {
             jjtThis.setJbcNode(new JBCEval((JBCExpr) logic));
         }
         |
-        <IF> <LPAREN> logic = Logic() <RPAREN> statement1 = Statement() <ELSE> statement2 = Statement() {
-            jjtThis.setJbcNode(new JBCIf((JBCExpr) logic, (JBCStmt) statement1, (JBCStmt) statement2));
-        }
+        <IF> <LPAREN> logic = Logic() <RPAREN>
+        (
+            ( statement1 = Statement() <ELSE> statement2 = Statement() {
+                jjtThis.setJbcNode(new JBCIf((JBCExpr) logic, (JBCStmt) statement1, (JBCStmt) statement2));
+            })
+            |
+            ( <LBRACE> statement1 = Statement() <RBRACE> <ELSE> <LBRACE> statement2 = Statement() <RBRACE> {
+                jjtThis.setJbcNode(new JBCIf((JBCExpr) logic, (JBCStmt) statement1, (JBCStmt) statement2));
+            })
+        )
     ) {
         return jjtThis.getJbcNode();
     }
