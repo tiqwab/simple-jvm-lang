@@ -57,6 +57,7 @@ TOKEN: {
     | < ASSIGN: "=" >
     | < IF: "if" >
     | < ELSE: "else" >
+    | < WHILE: "while" >
 }
 
 // Type modifier
@@ -86,7 +87,8 @@ TOKEN: {
 // --- Translation Scheme ---
 
 // S -> S'+
-// S' -> <TYPE> <ID> "=" L | <IF> "(" L ")" S' <ELSE> S' | <IF> "(" L ")" "{" S "}" <ELSE> "{" S "}" | L
+// S' -> <TYPE> <ID> "=" L | <IF> "(" L ")" S' <ELSE> S' | <IF> "(" L ")" "{" S "}" <ELSE> "{" S "}"
+//     | <WHILE> "(" L ")" "{" S "}" | L
 // L -> R | R "&&" R
 // R -> E | E "<" E | E "==" E
 // E -> T ("+" T | "-" T)*
@@ -148,6 +150,10 @@ JBCNode Statement(): {
                 jjtThis.setJbcNode(new JBCIf((JBCExpr) logic, (JBCStmt) statement1, (JBCStmt) statement2));
             })
         )
+        |
+        <WHILE> <LPAREN> logic = Logic() <RPAREN> <LBRACE> statement1 = Statements() <RBRACE> {
+            jjtThis.setJbcNode(new JBCWhile((JBCExpr) logic, (JBCStmt) statement1));
+        }
     ) {
         return jjtThis.getJbcNode();
     }

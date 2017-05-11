@@ -6,6 +6,7 @@ public interface JBCNodeVisitor {
     public void visit(JBCSeq node);
     public void visit(JBCAssign node);
     public void visit(JBCIf node);
+    public void visit(JBCWhile node);
     public void visit(JBCEval node);
     public void visit(JBCBinaryOperator node);
     public void visit(JBCRelOperator node);

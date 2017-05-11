@@ -190,6 +190,24 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
     }
 
     @Override
+    public void visit(JBCWhile node) {
+        JBCExpr expr = node.getExpr();
+        if (expr.calcType(env) != Type.Bool) {
+            throw new IllegalStateException("Expect boolean value but :" + expr.calcType(env));
+        }
+
+        Label labelStart = new Label();
+        mv.visitLabel(labelStart);
+        expr.accept(this);
+
+        Label labelBreak = new Label();
+        mv.visitJumpInsn(Opcodes.IFEQ, labelBreak);
+        node.getStmt().accept(this);
+        mv.visitJumpInsn(Opcodes.GOTO, labelStart);
+        mv.visitLabel(labelBreak);
+    }
+
+    @Override
     public void visit(JBCEval node) {
         node.getExpr().accept(this);
     }
