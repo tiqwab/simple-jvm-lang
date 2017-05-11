@@ -1,8 +1,6 @@
 ### TODO
 
 - array type
-- if
-  - block scope
 - while
 - function
 - (class or struct)
