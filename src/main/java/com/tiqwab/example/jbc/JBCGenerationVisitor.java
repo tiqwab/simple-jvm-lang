@@ -131,6 +131,13 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
     }
 
     @Override
+    public void visit(JBCBlock node) {
+        // TODO: Create new Environment here
+        JBCStmt stmt = node.getStmt();
+        stmt.accept(this);
+    }
+
+    @Override
     public void visit(JBCSeq node) {
         node.getHead().accept(this);
         node.getTail().ifPresent(seq -> seq.accept(this));

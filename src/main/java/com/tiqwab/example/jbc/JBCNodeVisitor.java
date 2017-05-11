@@ -2,6 +2,7 @@ package com.tiqwab.example.jbc;
 
 public interface JBCNodeVisitor {
 
+    public void visit(JBCBlock node);
     public void visit(JBCSeq node);
     public void visit(JBCAssign node);
     public void visit(JBCIf node);

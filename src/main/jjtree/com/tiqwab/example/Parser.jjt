@@ -116,6 +116,7 @@ JBCNode Statements(): {
             seq = tmp;
         }
     )* {
+        jjtThis.setJbcNode(new JBCBlock((JBCStmt) jjtThis.getJbcNode()));
         return jjtThis.getJbcNode();
     }
 }
