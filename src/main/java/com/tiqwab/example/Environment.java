@@ -8,12 +8,18 @@ import java.util.Optional;
 
 public class Environment {
 
+    private Optional<Environment> parent;
     private Map<String, Symbol> env = new HashMap<>();
     private int index;
 
-    // TODO: Is it correct to always initialize index as zero? (maybe not)
     public Environment() {
+        this.parent = Optional.empty();
         index = 0;
+    }
+
+    public Environment(Environment parent) {
+        this.parent = Optional.of(parent);
+        this.index = parent.index;
     }
 
     public void put(final String name, final Symbol symbol) {
@@ -23,22 +29,17 @@ public class Environment {
     public Optional<Symbol> get(final String name) {
         Symbol symbol = env.get(name);
         if (symbol == null) {
-            return Optional.empty();
+            return this.parent.map(p -> p.get(name)).orElse(Optional.empty());
         }
         return Optional.of(symbol);
     }
 
     public Symbol getOrNew(final String name, final Type type) {
-        Symbol symbol = env.get(name);
-        if (symbol == null) {
-            symbol = new Symbol(index++, type);
-            this.put(name, symbol);
-        }
-        return symbol;
+        return this.get(name).orElseGet(() -> this.newSymbol(name, type));
     }
 
     public boolean exists(final String name) {
-        return env.containsKey(name);
+        return this.get(name).isPresent();
     }
 
     public Symbol newSymbol(final String name, final Type varType) {

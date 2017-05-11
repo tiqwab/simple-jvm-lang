@@ -20,6 +20,7 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
 
     public JBCGenerationVisitor() {
         this.generatedClassName = "Calculation";
+        this.env = null;
     }
 
     public GeneratedCode getGeneratedCode() {
@@ -132,9 +133,12 @@ public class JBCGenerationVisitor implements JBCNodeVisitor {
 
     @Override
     public void visit(JBCBlock node) {
-        // TODO: Create new Environment here
+        final Environment prev = this.env;
+        this.env = new Environment(this.env);
+
         JBCStmt stmt = node.getStmt();
         stmt.accept(this);
+        this.env = prev;
     }
 
     @Override
