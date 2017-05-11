@@ -1,7 +1,6 @@
 ### TODO
 
 - array type
-- while
 - function
 - (class or struct)
 
