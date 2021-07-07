@@ -4,6 +4,12 @@
 - function
 - (class or struct)
 
+### Function
+
+- Use `MethodVisitor` in asm library
+- At first, enable to call function
+- Second, handle scopes correctly
+
 ### PROBLEM
 
 ```
